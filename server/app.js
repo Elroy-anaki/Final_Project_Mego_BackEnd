@@ -7,7 +7,7 @@ connectToMongoDB();
 // Define the server with express library
 import express from "express";
 const app = express();
-const port = Number(process.env.PORT) || 3000;
+const port = Number(process.env.PORT) || 3001;
 
 // Global Middlewares (imports + use)
 import cors from "cors";
