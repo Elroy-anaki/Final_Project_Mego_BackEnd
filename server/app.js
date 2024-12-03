@@ -18,5 +18,10 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Routes (imports + use)
+import usersRoutes from './routes/user.route.js'
+
+
+app.use('/users', usersRoutes)
+
 
 app.listen(port, () => console.log(`Server running on port ${port}...`));

@@ -1,4 +1,4 @@
-
+import User from '../models/user.model.js'
 
 export default {
     signUp: async (req,res)=>{
