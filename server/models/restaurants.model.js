@@ -31,7 +31,8 @@ const restaurantSchema = new Schema({
     },
     restaurantMaxOccupancy: {
         type: Number,
-        required: true
+        required: true,
+        default: 50
     },
     restaurantOccupancyTime: {
         type: [dateSchema],
