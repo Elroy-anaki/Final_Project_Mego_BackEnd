@@ -27,13 +27,35 @@ export const addRestaurant = async (req, res) => {
             msg: 'Restaurant created successfully!',
             data: restaurant
         });
-        
+
     } catch (error) {
         console.error(error);
         res.status(500).json({
             success: false,
             msg: 'Error creating restaurant!',
-            error: error.message || error
+            error: error
         });
     }
 };
+
+export const getRestaurant = async (req, res) => {
+    try {
+        const [restaurant] = await Restaurant.find()
+        
+        res.status(200).json({
+            success: true,
+            msg: 'Restaurant is here!',
+            data: restaurant
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({
+        success: false,
+        msg: 'Not found restaurant!',
+        error: error
+
+        })
+
+    }
+
+}
