@@ -44,7 +44,7 @@ export const login = async (req, res) => {
       const user = { ...userFromData._doc, userPassword: "*********" };
 
       // Send User Token For Experience with ReAuthenticate 
-      const token = jwt.sign({ user }, "Xn5&v9@z#G%hJq!Rk1tW*Z^a4Lb$NcP+Ym2o8Us0pTc7EdF", {
+      const token = jwt.sign({ user }, process.env.JWT_SECRET, {
         expiresIn: 60 * 60 * 1
       });
 
@@ -100,7 +100,7 @@ export const auth = async (req, res) => {
 
         if (!token) throw new Error("Token not Exist");
 
-        const decode = jwt.verify(token,"Xn5&v9@z#G%hJq!Rk1tW*Z^a4Lb$NcP+Ym2o8Us0pTc7EdF");
+        const decode = jwt.verify(token,process.env.JWT_SECRET);
 
         if (!decode) throw new Error("Token Not Valid")
 

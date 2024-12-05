@@ -55,7 +55,7 @@ export const getEmployeeById = async (req , res)=>{
 }
 export const employeeIsTokenExist = async (req , res)=>{
     try{
-    if (req.cookie)return true;
+    if (req.cookie.token) return true;
     return false
 
     }
