@@ -10,7 +10,7 @@ router.post('/add-meal', addMeal);
 
 router.get('/get-all-meals', getAllMeals);
 
-router.get('/get-meal-by-id/:id', getAllMeals);
+router.get('/get-meal-by-id/:id', getMealById);
 
 
 
