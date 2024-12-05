@@ -81,7 +81,7 @@ export const logOut = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Success log Out ",
-      user: req.user
+      user: req.user.user
     });
   } catch (error) {
     res.status(401).json({
