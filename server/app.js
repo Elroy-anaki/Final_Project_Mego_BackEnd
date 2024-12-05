@@ -21,11 +21,13 @@ app.use(cookieParser());
 import usersRoutes from './routes/user.route.js'
 import restaurantRoutes from './routes/restaurant.route.js';
 import mealRoutes  from './routes/meal.route.js'
+import employeeRoutes  from './routes/employee.route.js'
 
 
 app.use('/users', usersRoutes);
 app.use('/restaurant', restaurantRoutes);
 app.use('/meals', mealRoutes);
+app.use('/employees',employeeRoutes)
 
 
 app.listen(port, () => console.log(`Server running on port ${port}...`));
