@@ -12,6 +12,6 @@ router.post("/sign-in", signIn);
 
 router.get("/log-Out", verifyToken, logOut);
 
-router.get("/auth", verifyToken, auth);
+router.get("/auth",  auth);
 
 export default router;

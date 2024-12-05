@@ -20,6 +20,6 @@ router.get("/get-all-employees", getAllEmployees);
 
 router.get("/get-employee-by-id/:id", getEmployeeById);
 
-router.get("/auth", verifyToken, auth);
+router.get("/auth", auth);
 
 export default router;
