@@ -16,7 +16,7 @@ import cookieParser from "cookie-parser";
 app.use(cors({
     optionsSuccessStatus: 200,
     credentials: true,
-    origin: ["http://localhost:8000","http://localhost:8001"]
+    origin: ["http://localhost:8000", "http://localhost:8001"]
 }));
 
 app.use(express.json());
@@ -25,14 +25,14 @@ app.use(cookieParser());
 // Routes (imports + use)
 import usersRoutes from './routes/user.route.js'
 import restaurantRoutes from './routes/restaurant.route.js';
-import mealRoutes  from './routes/meal.route.js'
-import employeeRoutes  from './routes/employee.route.js'
+import mealRoutes from './routes/meal.route.js'
+import employeeRoutes from './routes/employee.route.js'
 
 
 app.use('/users', usersRoutes);
 app.use('/restaurant', restaurantRoutes);
 app.use('/meals', mealRoutes);
-app.use('/employees',employeeRoutes)
+app.use('/employees', employeeRoutes)
 
 
 app.listen(port, () => console.log(`Server running on port ${port}...`));

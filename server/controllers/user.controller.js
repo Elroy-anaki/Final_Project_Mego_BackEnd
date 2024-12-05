@@ -24,7 +24,8 @@ export const signUp = async (req, res) => {
 }
 
 
-export const login = async (req, res) => {
+export const signIn = async (req, res) => {
+  console.log(req.body)
     try {
       const { userPassword, userEmail } = req.body;
 
@@ -44,7 +45,7 @@ export const login = async (req, res) => {
       const user = { ...userFromData._doc, userPassword: "*********" };
 
       // Send User Token For Experience with ReAuthenticate 
-      const token = jwt.sign({ user }, process.env.JWT_SECRET, {
+      const token = jwt.sign({ user }, "Xn5&v9@z#G%hJq!Rk1tW*Z^a4Lb$NcP+Ym2o8Us0pTc7EdF", {
         expiresIn: 60 * 60 * 1
       });
 
@@ -58,15 +59,15 @@ export const login = async (req, res) => {
 
       res.status(200).json({
         success: true,
-        message: "Success Login User",
+        msg: "Success Login User",
         data: user
       
     });
     } catch (error) {
       res.status(401).json({
         success: false,
-        message: "not Success Login User",
-        error: error.message || error,
+        msg: "not Success Login User",
+        error: error.msg || error,
       });
     }
   };
@@ -81,44 +82,16 @@ export const logOut = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: "Success log Out ",
+      msg: "Success log Out ",
       data: req.user.user
     });
   } catch (error) {
     res.status(401).json({
       success: false,
-      message: "not Success Auth User",
-      error: error.message || error,
+      msg: "not Success Auth User",
+      error: error.msg || error,
     });
   }
 };
 
-
-export const auth = async (req, res) => {
-  try {
-
-    const { token } = req.cookies;
-
-        if (!token) throw new Error("Token not Exist");
-
-        const decode = jwt.verify(token,process.env.JWT_SECRET);
-
-        if (!decode) throw new Error("Token Not Valid")
-
-        
-
-
-    res.status(200).json({
-      success: true,
-      message: "Success Auth User",
-      data: decode.user
-    });
-  } catch (error) {
-    res.status(401).json({
-      success: false,
-      message: "not Success Auth User",
-      error: error.message || error,
-    });
-  }
-}
 
