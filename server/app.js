@@ -13,7 +13,12 @@ const port = Number(process.env.PORT) || 3001;
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
-app.use(cors());
+app.use(cors({
+    optionsSuccessStatus: 200,
+    credentials: true,
+    origin: ["http://localhost:8000","http://localhost:8001"]
+}));
+
 app.use(express.json());
 app.use(cookieParser());
 
