@@ -59,8 +59,9 @@ export const login = async (req, res) => {
       res.status(200).json({
         success: true,
         message: "Success Login User",
-        user,
-      });
+        data: user
+      
+    });
     } catch (error) {
       res.status(401).json({
         success: false,
@@ -81,7 +82,7 @@ export const logOut = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Success log Out ",
-      user: req.user.user
+      data: req.user.user
     });
   } catch (error) {
     res.status(401).json({
@@ -110,7 +111,7 @@ export const auth = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Success Auth User",
-      user: decode.user
+      data: decode.user
     });
   } catch (error) {
     res.status(401).json({
