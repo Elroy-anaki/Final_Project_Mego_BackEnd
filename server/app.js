@@ -23,7 +23,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Routes (imports + use)
-import authRoutes from './routes/auth.controller.js'
+import authRoutes from './routes/auth.route.js'
 import restaurantRoutes from './routes/restaurant.route.js';
 import usersRoutes from './routes/user.route.js'
 import mealRoutes from './routes/meal.route.js'
