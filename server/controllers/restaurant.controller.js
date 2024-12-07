@@ -10,16 +10,14 @@ export const addRestaurant = async (req, res) => {
             });
         }
 
-        console.log('Uploading to Cloudinary...');
         const [restaurantImageDetails, restaurantLogoDetails] = await Promise.all([
             cloudinary.uploader.upload(req.files.restaurantImage[0].path),
             cloudinary.uploader.upload(req.files.restaurantLogo[0].path)
         ]);
+
         req.body.restaurantImage = restaurantImageDetails.secure_url;
         req.body.restaurantLogo = restaurantLogoDetails.secure_url;
 
-
-        console.log('Restaurant data to be saved:', req.body);
         const restaurant = await Restaurant.create(req.body);
 
         res.status(201).json({
@@ -41,7 +39,7 @@ export const addRestaurant = async (req, res) => {
 export const getRestaurant = async (req, res) => {
     try {
         const [restaurant] = await Restaurant.find()
-        
+
         res.status(200).json({
             success: true,
             msg: 'Restaurant is here!',
@@ -50,9 +48,9 @@ export const getRestaurant = async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(404).json({
-        success: false,
-        msg: 'Not found restaurant!',
-        error: error
+            success: false,
+            msg: 'Not found restaurant!',
+            error: error
 
         })
 

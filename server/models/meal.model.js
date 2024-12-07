@@ -32,7 +32,6 @@ const mealModel = new Schema({
             }
         ],
         required: true,
-        unique: true,
         default: []
     }
 }, { timestamps: true })
