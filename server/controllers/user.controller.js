@@ -1,9 +1,6 @@
 import User from "../models/user.model.js";
 import { compare } from "bcrypt";
-import jwt from "jsonwebtoken";
-
-
-
+import { jwtCookieOptions, generateToken } from "../service/auth.service.js";
 
 
 export const signUp = async (req, res) => {
@@ -21,77 +18,43 @@ export const signUp = async (req, res) => {
       error,
     });
   }
-}
-
+};
 
 export const signIn = async (req, res) => {
   console.log(req.body)
-    try {
-      const { userPassword, userEmail } = req.body;
-
-      if (!userPassword || !userEmail)
-        throw new Error("all fields required!");
-
-      // if Email Exist
-      const userFromData = await User.findOne({ userEmail });
-
-      if (!userFromData) throw new Error("User Not Exist!");
-
-      // if Password match
-      const isMatch = await compare(userPassword, userFromData.userPassword);
-
-      if (!isMatch) throw new Error("Password not Valid!");
-
-      const user = { ...userFromData._doc, userPassword: "*********" };
-
-      // Send User Token For Experience with ReAuthenticate 
-      const token = jwt.sign({ user }, "Xn5&v9@z#G%hJq!Rk1tW*Z^a4Lb$NcP+Ym2o8Us0pTc7EdF", {
-        expiresIn: 60 * 60 * 1
-      });
-
-      res.cookie("token", token, {
-        httpOnly: true,
-        secure: true,
-        maxAge: 1000 * 60 * 60 * 1
-      });
-      
-    
-
-      res.status(200).json({
-        success: true,
-        msg: "Success Login User",
-        data: user
-      
-    });
-    } catch (error) {
-      res.status(401).json({
-        success: false,
-        msg: "not Success Login User",
-        error: error.msg || error,
-      });
-    }
-  };
-
-
-export const logOut = async (req, res) => {
   try {
-    res.clearCookie("token", { 
-      httpOnly: true, 
-      secure: true
-     });
+    const { userPassword, userEmail } = req.body;
 
+    if (!userPassword || !userEmail)
+      throw new Error("all fields required!");
+
+    const user = await User.findOne({ userEmail });
+
+    if (!user) throw new Error("User Not Exist!");
+
+    const isMatch = await compare(userPassword, user.userPassword);
+
+    if (!isMatch) throw new Error("Password not Valid!");
+
+    const data = generateToken(user);
+    const token = data.token;
+    const payload = data.payload;
+
+    res.cookie("token", token, jwtCookieOptions);
     res.status(200).json({
       success: true,
-      msg: "Success log Out ",
-      data: req.user.user
+      msg: "User Sign-in Successfully ",
+      data: payload
     });
+
   } catch (error) {
     res.status(401).json({
       success: false,
-      msg: "not Success Auth User",
+      msg: "User Sign-in failed",
       error: error.msg || error,
     });
   }
 };
+
 
 

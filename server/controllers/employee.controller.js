@@ -79,12 +79,14 @@ export const signIn = async (req, res) => {
 };
 
 export const getAllEmployees = async (req, res) => {
+  console.log("employees")
+  
   try {
-    const employees = await Employee.find();
+    const employes = await Employee.find();
+    console.log(employes)
     return res
       .status(200)
-      .json({ success: true, msg: "success get all employees", data: employees });
-
+      .json({ success: true, msg: "success get all employees", data: employes });
   }
   catch (error) {
     console.log(error);
@@ -114,33 +116,6 @@ export const getEmployeeById = async (req, res) => {
     });
 
   }
-};
-
-export const employeeIsTokenExist = async (req, res) => {
-  try {
-
-    const { token } = req.cookies;
-
-    if (!token) throw new Error("Token not Exist");
-
-    const decode = jwt.verify(token, "Xn5&v9@z#G%hJq!Rk1tW*Z^a4Lb$NcP+Ym2o8Us0pTc7EdF");
-
-    if (!decode) throw new Error("Token Not Valid")
-
-    res.status(200).json({
-      success: true,
-      msg: "Success Auth User",
-      data: decode.user
-
-    });
-  } catch (error) {
-    res.status(401).json({
-      success: false,
-      msg: error,
-      error: error.message || error,
-    });
-  }
-
 };
 
 
