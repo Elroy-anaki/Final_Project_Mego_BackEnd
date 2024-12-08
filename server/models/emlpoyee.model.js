@@ -21,6 +21,11 @@ const emlpoyeeSchema = new Schema({
         type:String,
         default:"admin",
         enum:["employee","admin"]
+    },
+    forgotPasswordId: {
+        type: String,
+        required: false,
+        default: null
     }
 },{timestamps:true});
 

@@ -1,35 +1,70 @@
 import jwt from "jsonwebtoken";
 import Employee from '../models/emlpoyee.model.js'
 import User from '../models/user.model.js'
+import transporter from "../config/nodemailer.config.js";
+import {nanoid} from 'nanoid';
 
-const changePasswordByPremission = async (data) => {
+const changePasswordByPremission = async (data, queryParams) => {
+  console.log(queryParams.userId)
   try {
-    const { premission, email, password } = data;
+    const { premission, password } = data;
 
     if (premission === 'employee') {
-      const employee = await Employee.findOne({ employeeEmail: email });
+      const employee = await Employee.findById(queryParams.userId);
+      console.log(employee)
+      console.log(employee.forgotPasswordId)
+      console.log(queryParams.forgotPasswordId)
+      if(!employee.forgotPasswordId || (employee.forgotPasswordId !== queryParams.forgotPasswordId))
+        { throw new Error("This employee doesn't need to reset password ")}
+
       employee.employeePassword = password;
+      employee.forgotPasswordId = null;
       employee.save();
+      console.log(employee)
       return employee;
     }
     if (premission === 'user') {
-      const user = await User.findOne({ userEmail: email });
+      const user = await User.findOne({ id });
       user.userPassword = password;
       user.save();
       return user
     }
   } catch (error) {
+    console.log(error)
     throw error;
 
   }
 
 }
 
+// const sendForgortPasswordMail = 
+
+export const forogtPassword = async (req, res) => {
+  console.log(req.body)
+  const {email} = req.body;
+  const employee = await Employee.findOne({employeeEmail: email});
+  employee.forgotPasswordId = nanoid();
+  employee.save();
+  console.log("NN", employee.forgotPasswordId)
+  transporter.sendMail({
+    from: "",
+    to: employee.employeeEmail,
+    subject: "Reset Password",
+        html: `<h1>Hello ${employee.employeeName}</h1>
+           <p>Please click the button below to reset your password:</p>
+           <a href="http://localhost:8000/reset-password?userId=${employee._id}&forgotPasswordId=${employee.forgotPasswordId}">
+             Reset Password
+           </a>`,
+  })  
+}
+
 
 export const resetPassword = async (req, res) => {
   console.log(req.body)
+  const { userId } = req.query;
+  console.log(req.query)
   try{
-    const data = await changePasswordByPremission(req.body)
+    const data = await changePasswordByPremission(req.body, req.query)
     console.log(data)
     res.status(200).json({
       success: true,
