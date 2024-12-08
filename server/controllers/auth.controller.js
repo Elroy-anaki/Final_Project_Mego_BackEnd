@@ -89,14 +89,14 @@ export const verifyToken = async (req, res) => {
 
     if (!token) throw new Error("Token not Exist");
 
-    const decodeToken = jwt.verify(token, "Xn5&v9@z#G%hJq!Rk1tW*Z^a4Lb$NcP+Ym2o8Us0pTc7EdF");
+    const data = jwt.verify(token, "Xn5&v9@z#G%hJq!Rk1tW*Z^a4Lb$NcP+Ym2o8Us0pTc7EdF");
 
-    if (!decodeToken) throw new Error("Token Not Valid")
-
+    if (!data) throw new Error("Token Not Valid")
+ 
     res.status(200).json({
       success: true,
       msg: "Auth success",
-      data: decodeToken
+      data
     });
   } catch (error) {
     res.status(401).json({
@@ -108,6 +108,7 @@ export const verifyToken = async (req, res) => {
 };
 
 export const logOut = async (req, res) => {
+  // console.log("nnnnn",req)
   try {
     res.clearCookie("token", {
       httpOnly: true,
@@ -117,7 +118,7 @@ export const logOut = async (req, res) => {
     res.status(200).json({
       success: true,
       msg: "Success log Out ",
-      data: req.user.user
+      // data: req.user.user
     });
   } catch (error) {
     res.status(401).json({
