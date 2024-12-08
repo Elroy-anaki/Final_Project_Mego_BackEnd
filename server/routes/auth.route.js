@@ -1,7 +1,8 @@
 import { Router } from 'express';
-import {resetPassword, verifyToken , logOut} from '../controllers/auth.controller.js'
+import {resetPassword, forogtPassword,  verifyToken , logOut} from '../controllers/auth.controller.js'
 const router = Router();
 
+router.post('/forgot-password', forogtPassword)
 
 router.post('/reset-password', resetPassword);
 
