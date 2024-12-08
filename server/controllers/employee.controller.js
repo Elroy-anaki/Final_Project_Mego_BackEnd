@@ -50,10 +50,10 @@ export const signIn = async (req, res) => {
 
     if (!isMatch) throw new Error("Password not Valid!");
 
-    const employee = { ...employeeFromData._doc, employeePassword: "*********" };
+    const data = { ...employeeFromData._doc, employeePassword: "*********" };
 
     // Send User Token For Experience with ReAuthenticate 
-    const token = jwt.sign({ employee: employee }, "Xn5&v9@z#G%hJq!Rk1tW*Z^a4Lb$NcP+Ym2o8Us0pTc7EdF", {
+    const token = jwt.sign({ data }, "Xn5&v9@z#G%hJq!Rk1tW*Z^a4Lb$NcP+Ym2o8Us0pTc7EdF", {
       expiresIn: 60 * 60 * 1
     });
 
@@ -66,7 +66,7 @@ export const signIn = async (req, res) => {
     res.status(200).json({
       success: true,
       msg: "Success Login User",
-      data: employee
+      data
 
     });
   } catch (error) {
