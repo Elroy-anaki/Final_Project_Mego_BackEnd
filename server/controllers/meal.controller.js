@@ -77,4 +77,28 @@ export const getMealById = async (req, res) => {
     });
   }
 }
+export const getAllReviewsByMealId = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const meal = await Meal.findById(id).populate({path: 'reviews'});
+    if (!meal) {
+      return res.status(404).json({
+        success: false,
+        message: "Meal not foumd.",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Meal retrieved successfully.",
+      meal,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to retrieve meal.",
+      error: error.message || error,
+    });
+  }
+}
 
