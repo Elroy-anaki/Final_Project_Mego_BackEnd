@@ -1,4 +1,4 @@
-import MealCategories from "../models/mealCategories.model.js";
+import MealCategories from "../models/mealCategory.model.js";
 import cloudinary from '../config/cloudinary.config.js';
 
 

@@ -28,7 +28,7 @@ import restaurantRoutes from './routes/restaurant.route.js';
 import usersRoutes from './routes/user.route.js'
 import mealRoutes from './routes/meal.route.js'
 import employeeRoutes from './routes/employee.route.js'
-import reviewsRoutes from './routes/reviews.route.js'
+import reviewsRoutes from './routes/review.route.js'
 
 
 

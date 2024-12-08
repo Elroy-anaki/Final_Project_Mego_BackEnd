@@ -1,4 +1,4 @@
-import Restaurant from '../models/restaurants.model.js';
+import Restaurant from '../models/restaurant.model.js';
 import cloudinary from '../config/cloudinary.config.js';
 
 export const addRestaurant = async (req, res) => {
