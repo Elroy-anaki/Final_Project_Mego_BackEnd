@@ -37,16 +37,18 @@ export const addMeal = async (req, res) => {
 export const getAllMeals = async (req, res) => {
   try {
     const meals = await Meal.find();
+    console.log(meals);
+    
 
     res.status(200).json({
       success: true,
-      message: "Meals retrieved successfully.",
-      meals,
+      msg: "Meals retrieved successfully.",
+      data: meals
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: "Failed to retrieve meals.",
+      msg: "Failed to retrieve meals.",
       error: error.message || error,
     });
   }
@@ -77,6 +79,7 @@ export const getMealById = async (req, res) => {
     });
   }
 }
+
 export const getAllReviewsByMealId = async (req, res) => {
   try {
     const { id } = req.params;
@@ -102,3 +105,24 @@ export const getAllReviewsByMealId = async (req, res) => {
   }
 }
 
+export const deleteMealById = async (req, res) => {
+  console.log("XXXXXXXXXXXXXXXXXXXXXXXXXX", req.params)
+  try {
+    const mealToDelete = await Meal.findByIdAndDelete(req.params.id);
+    console.log(mealToDelete);
+    return;
+    res.status(204).json({
+      success: true,
+      msg: "Meal deleted!",
+      data: mealToDelete
+
+    })
+    
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      msg: error
+    })
+    
+  }
+}
