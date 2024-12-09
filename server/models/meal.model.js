@@ -24,6 +24,16 @@ const mealModel = new Schema({
         required: true,
         default: 0
     },
+    mealCategory: {
+        type: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'MealCategories',
+                required: true
+            }
+        ]
+
+    },
     reviews: {
         type: [
             {
@@ -36,6 +46,6 @@ const mealModel = new Schema({
     }
 }, { timestamps: true })
 
-const Meal = model("Meals",mealModel);
+const Meal = model("Meals", mealModel);
 
 export default Meal;

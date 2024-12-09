@@ -6,8 +6,8 @@ export const addMeal = async (req, res) => {
   console.log(req.body);
   console.log(req.file);
   try {
-    const { mealName, mealPrice, ingredients } = req.body;
-    if (!mealName || !mealPrice || !ingredients)
+    const { mealName, mealPrice, ingredients, mealCategory } = req.body;
+    if (!mealName || !mealPrice || !ingredients || !mealCategory)
       throw new Error("all fields requierd!");
 
     const ingredientsArray = JSON.parse(req.body.ingredients);
