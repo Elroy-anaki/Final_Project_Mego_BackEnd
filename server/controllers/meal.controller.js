@@ -8,8 +8,8 @@ export const addMeal = async (req, res) => {
   req.body.ingredients = String(req.body.ingredients).split(',')
 
   try {
-    const { mealName, mealPrice, ingredients } = req.body;
-    if (!mealName || !mealPrice || !ingredients)
+    const { mealName, mealPrice, ingredients, mealCategory } = req.body;
+    if (!mealName || !mealPrice || !ingredients || !mealCategory)
       throw new Error("all fields requierd!");
 
     if (req.file) {
