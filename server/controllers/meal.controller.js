@@ -6,6 +6,7 @@ export const addMeal = async (req, res) => {
   console.log("body", req.body);
   console.log("file", req.file);
   req.body.ingredients = String(req.body.ingredients).split(',')
+  req.body.mealCategory = JSON.parse(req.body.mealCategory)
 
   try {
     const { mealName, mealPrice, ingredients, mealCategory } = req.body;
@@ -24,6 +25,7 @@ export const addMeal = async (req, res) => {
       data: newMeal,
     });
   } catch (error) {
+    console.log("error", error)
     res.status(500).json({
       success: false,
       msg: "Failed to add meal.",
@@ -54,22 +56,17 @@ export const getMealById = async (req, res) => {
     const { id } = req.params;
 
     const meal = await Meal.findById(id);
-    if (!meal) {
-      return res.status(404).json({
-        success: false,
-        message: "Meal not foumd.",
-      });
-    }
+    if(!meal) { throw new Error("The meal doesn't exist!")}
 
     res.status(200).json({
       success: true,
-      message: "Meal retrieved successfully.",
-      meal,
+      msg: "Meal retrieved successfully.",
+      data: meal
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: "Failed to retrieve meal.",
+      msg: "Failed to retrieve meal.",
       error: error.message || error,
     });
   }
@@ -80,12 +77,7 @@ export const getAllReviewsByMealId = async (req, res) => {
   try {
     const { id } = req.params;
     const meal = await Meal.findById(id).populate({ path: 'reviews' });
-    if (!meal) {
-      return res.status(404).json({
-        success: false,
-        msg: "Meal not found.",
-      });
-    }
+    if (!meal) {throw new Error ("The meal doesn't exist!")}
 
     res.status(200).json({
       success: true,
@@ -105,6 +97,7 @@ export const deleteMealById = async (req, res) => {
   console.log("XXXXXXXXXXXXXXXXXXXXXXXXXX", req.params)
   try {
     const mealToDelete = await Meal.findByIdAndDelete(req.params.id);
+    
     console.log(mealToDelete);
     res.status(204).json({
       success: true,
