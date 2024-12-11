@@ -1,6 +1,6 @@
 import mongoose, { Schema, model } from "mongoose";
 
-const reviewsModel = new Schema({
+const reviewSchema = new Schema({
     userName: {
         type: String,
         default: "John Doe"
@@ -28,6 +28,6 @@ const reviewsModel = new Schema({
    
 }, { timestamps: true })
 
-const Review = model("Reviews",reviewsModel);
+const Review = model("Reviews",reviewSchema);
 
 export default Review;

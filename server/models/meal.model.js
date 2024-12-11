@@ -1,6 +1,6 @@
 import mongoose, { Schema, model } from "mongoose";
 
-const mealModel = new Schema({
+const mealSchema = new Schema({
     mealName: {
         type: String,
         required: true,
@@ -24,16 +24,12 @@ const mealModel = new Schema({
         required: true,
         default: 0
     },
-    mealCategory: {
-        type: [
+    mealCategories:[
             {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: 'MealCategories',
-                required: true
-            }
-        ]
-
-    },
+                ref: 'Categories',
+            },
+    ],
     reviews: {
         type: [
             {
@@ -46,6 +42,6 @@ const mealModel = new Schema({
     }
 }, { timestamps: true })
 
-const Meal = model("Meals", mealModel);
+const Meal = model("Meals", mealSchema);
 
 export default Meal;

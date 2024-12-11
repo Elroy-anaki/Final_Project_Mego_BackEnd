@@ -1,13 +1,13 @@
-import MealCategories from "../models/mealCategory.model.js";
+import Categories from "../models/category.model.js";
 import cloudinary from '../config/cloudinary.config.js';
 
 
-export const addMealCategories = async (req, res) => {
+export const addCategory = async (req, res) => {
   console.log(req.body);
   console.log(req.file);
   try {
-    const { mealCategoriesName } = req.body;
-    if (!mealCategoriesName) {
+    const { categoryName } = req.body;
+    if (!categoryName) {
       res.status(400).json({
         success: false,
         msg: "All fields are required!",
@@ -16,15 +16,15 @@ export const addMealCategories = async (req, res) => {
 
     if (req.file) {
       const uploadResult = await cloudinary.uploader.upload(req.file.path);
-      req.body.mealCategoriesImage = uploadResult.secure_url;
+      req.body.categoryImage = uploadResult.secure_url;
     }
 
-    const newMealCategories = await MealCategories.create(req.body);
+    const newCategory = await MealCategories.create(req.body);
 
     res.status(201).json({
       success: true,
       msg: "Meal category added successfully.",
-      data: newMealCategories,
+      data: newCategories,
     });
   } catch (error) {
 
@@ -43,7 +43,7 @@ export const addMealCategories = async (req, res) => {
   }
 };
 
-export const deleteMealCategory = async (req, res) => {
+export const deleteCategory = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -70,14 +70,14 @@ export const deleteMealCategory = async (req, res) => {
   }
 };
 
-export const getAllMealCategories = async (req, res) => {
+export const getAllCategories = async (req, res) => {
   try {
 
-    const mealCategories = await MealCategories.find();
+    const categories = await Categories.find();
     res.status(200).json({
       success: true,
       msg: "All meal's categories here",
-      data: mealCategories,
+      data: categories,
     });
   } catch (error) {
     res.status(500).json({
@@ -87,6 +87,3 @@ export const getAllMealCategories = async (req, res) => {
     });
   }
 };
-
-
-
