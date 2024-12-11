@@ -1,5 +1,6 @@
 import Employee from "../models/emlpoyee.model.js";
 import { compare } from "bcrypt";
+import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 
 
@@ -70,6 +71,7 @@ export const signIn = async (req, res) => {
 
     });
   } catch (error) {
+    console.log(error)
     res.status(401).json({
       success: false,
       msg: "not Success Login User",
@@ -117,5 +119,25 @@ export const getEmployeeById = async (req, res) => {
 
   }
 };
+
+export const deleteEmployeeById = async (req, res) => {
+  console.log(req.params.id);
+  try {
+    const employeeToDelete = await Employee.findByIdAndDelete(req.params.id)
+    res.status(204).json({
+      success: true,
+      msg: "Employee deleted successfully!",
+      data: employeeToDelete
+    })
+  } catch (error) {
+    console.log("error", error);
+    res.status(500).json({
+      success: false,
+      msg: "Employee NOT deleted successfully!",
+      error: error
+    })
+    
+  }
+}
 
 

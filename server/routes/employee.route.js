@@ -4,6 +4,7 @@ import {
   signIn,
   getAllEmployees,
   getEmployeeById,
+  deleteEmployeeById
 } from "../controllers/employee.controller.js";
 
 
@@ -17,5 +18,6 @@ router.get("/get-all-employees", getAllEmployees);
 
 router.get("/get-employee-by-id/:id", getEmployeeById);
 
+router.delete('/delete-employee-by-id/:id', deleteEmployeeById);
 
 export default router;

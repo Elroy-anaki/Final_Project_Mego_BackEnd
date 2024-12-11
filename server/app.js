@@ -29,7 +29,7 @@ import usersRoutes from './routes/user.route.js'
 import mealRoutes from './routes/meal.route.js'
 import employeeRoutes from './routes/employee.route.js'
 import reviewsRoutes from './routes/review.route.js'
-import MealCategoriesRoutes from './routes/mealCategory.route.js'
+import categoriesRoutes from './routes/category.route.js'
 
 
 
@@ -39,7 +39,7 @@ app.use('/users', usersRoutes);
 app.use('/meals', mealRoutes);
 app.use('/employees', employeeRoutes)
 app.use('/reviews', reviewsRoutes)
-app.use('/meals-categories', MealCategoriesRoutes)
+app.use('/categories', categoriesRoutes)
 
 
 
