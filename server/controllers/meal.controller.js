@@ -104,12 +104,13 @@ export const editMealById = async (req, res) => {
   req.body.ingredients = String(req.body.ingredients).split(',')
   req.body.mealCategories = JSON.parse(req.body.mealCategories)
   try {
-    const existingMeal = await Meal.findById(id);
-    if (!existingMeal) { throw new Error("The meal doesn't exist!") }
+    // const existingMeal = await Meal.findById(id);
+    // if (!existingMeal) { throw new Error("The meal doesn't exist!") }
 
-    const mealImage = existingMeal.mealImage;
+    // const mealImage = existingMeal.mealImage;
+    if(!req.file) delete req.body.mealImage
 
-    const editedMeal = await Meal.findByIdAndUpdate(id, { $set: { ...req.body, mealImage } }, { new: true })
+    const editedMeal = await Meal.findByIdAndUpdate(id,req.body,{ new: true })
 
     res.status(204).json({
       success: true,

@@ -120,6 +120,32 @@ export const getEmployeeById = async (req, res) => {
   }
 };
 
+export const editEmployeeById = async (req, res) => {
+  console.log("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG")
+  console.log(req.params.id)
+  delete req.body.employeePassword
+  console.log(req.body)
+  try {
+    const editedMeal = await Employee.findByIdAndUpdate(req.params.id, req.body, {new:true});
+    res.status(204).json({
+      success: true,
+      msg: "Employee Edited!",
+      data: editedMeal
+    })
+    
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      msg: "Employee NOT Edited!",
+      error: error.message || error
+    })
+    
+    
+  }
+  
+  return
+}
 export const deleteEmployeeById = async (req, res) => {
   console.log(req.params.id);
   try {
