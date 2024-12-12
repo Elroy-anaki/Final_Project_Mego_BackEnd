@@ -37,14 +37,19 @@ export const addMeal = async (req, res) => {
 };
 
 export const getAllMeals = async (req, res) => {
+  const { limit , page } = req.query;
+
   try {
-    const meals = await Meal.find().populate('mealCategories', "categoryName");
+    const countMeals = await Meal.countDocuments();
+
+    const meals = await Meal.find().populate('mealCategories', "categoryName").skip((page - 1) * limit).limit(limit);
     console.log(meals);
 
     res.status(200).json({
       success: true,
       msg: "Meals retrieved successfully.",
-      data: meals
+      data: meals,
+      count: countMeals
     });
   } catch (error) {
     res.status(500).json({
