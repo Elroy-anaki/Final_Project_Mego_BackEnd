@@ -30,6 +30,7 @@ import mealRoutes from './routes/meal.route.js'
 import employeeRoutes from './routes/employee.route.js'
 import reviewsRoutes from './routes/review.route.js'
 import categoriesRoutes from './routes/category.route.js'
+import ordersRoutes from './routes/order.route.js'
 
 
 
@@ -40,6 +41,7 @@ app.use('/meals', mealRoutes);
 app.use('/employees', employeeRoutes)
 app.use('/reviews', reviewsRoutes)
 app.use('/categories', categoriesRoutes)
+app.use('/orders', ordersRoutes)
 
 
 
