@@ -91,10 +91,10 @@ export const editOrderById = async (req, res) => {
   return
 };
 
-export const deleteEmployeeById = async (req, res) => {
+export const deleteOrderById = async (req, res) => {
   console.log(req.params.id);
   try {
-    const orderToDelete = await Employee.findByIdAndDelete(req.params.id)
+    const orderToDelete = await Order.findByIdAndDelete(req.params.id)
     res.status(204).json({
       success: true,
       msg: "Order deleted successfully!",
