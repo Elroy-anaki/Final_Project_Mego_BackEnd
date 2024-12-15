@@ -16,6 +16,7 @@ const emlpoyeeSchema = new Schema({
         type:String,
         required:true,
         min:5
+        
     },
     premission:{
         type:String,

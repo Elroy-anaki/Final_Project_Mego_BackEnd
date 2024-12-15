@@ -48,6 +48,7 @@ export const signIn = async (req, res) => {
     });
 
   } catch (error) {
+    console.log(error)
     res.status(401).json({
       success: false,
       msg: "User Sign-in failed",
