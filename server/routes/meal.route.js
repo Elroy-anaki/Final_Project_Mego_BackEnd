@@ -6,7 +6,8 @@ import {
   autoComplete,
   getAllReviewsByMealId,
   deleteMealById,
-  editMealById
+  editMealById,
+  getMealsByCategory
 } from "../controllers/meal.controller.js";
 import upload from "../config/multer.config.js";
 
@@ -15,6 +16,8 @@ const router = Router();
 router.post("/add-meal", upload.single("mealImage"), addMeal);
 
 router.get("/get-all-meals", getAllMeals);
+
+router.get('/get-meals-by-category/:categoryId', getMealsByCategory);
 
 router.get("/get-meal-by-id/:id", getMealById);
 
