@@ -20,6 +20,10 @@ const userSchema = new Schema({
     premission:{
         type:String,
         default:"Regular",
+    },
+    verify: {
+        type: Boolean,
+        default: false
     }
 },{timestamps:true});
 

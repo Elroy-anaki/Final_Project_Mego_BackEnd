@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import Employee from '../models/emlpoyee.model.js'
 import User from '../models/user.model.js'
 import transporter from "../config/nodemailer.config.js";
-import {nanoid} from 'nanoid';
+import { nanoid } from 'nanoid';
 
 const changePasswordByPremission = async (data, queryParams) => {
   console.log(queryParams.userId)
@@ -14,8 +14,7 @@ const changePasswordByPremission = async (data, queryParams) => {
       console.log(employee)
       console.log(employee.forgotPasswordId)
       console.log(queryParams.forgotPasswordId)
-      if(!employee.forgotPasswordId || (employee.forgotPasswordId !== queryParams.forgotPasswordId))
-        { throw new Error("This employee doesn't need to reset password ")}
+      if (!employee.forgotPasswordId || (employee.forgotPasswordId !== queryParams.forgotPasswordId)) { throw new Error("This employee doesn't need to reset password ") }
 
       employee.employeePassword = password;
       employee.forgotPasswordId = null;
@@ -35,35 +34,65 @@ const changePasswordByPremission = async (data, queryParams) => {
 
   }
 
+};
+
+const verifyEmailByType = async (data) => {
+  try {
+    if (data.type === 'user') {
+      const user = await User.findByIdAndUpdate(data.userId, { verify: true })
+    }
+  } catch (error) {
+    console.log("Function", error)
+    throw error
+  }
 }
 
-// const sendForgortPasswordMail = 
+export const emailVerification = async (req, res) => {
+  console.log(req.query)
+  try {
+    await verifyEmailByType(req.query)
+    res.status(200).json({
+      success: true,
+      msg: "Verify Email Successfully!"
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      success: false,
+      msg: "Not Verify Your Email",
+      error: error
+    })
+    
+  }
+
+
+
+
+}
 
 export const forogtPassword = async (req, res) => {
   console.log(req.body)
-  const {email} = req.body;
-  const employee = await Employee.findOne({employeeEmail: email});
+  const { email } = req.body;
+  const employee = await Employee.findOne({ employeeEmail: email });
   employee.forgotPasswordId = nanoid();
   employee.save();
-  console.log("NN", employee.forgotPasswordId)
   transporter.sendMail({
     from: "",
     to: employee.employeeEmail,
     subject: "Reset Password",
-        html: `<h1>Hello ${employee.employeeName}</h1>
+    html: `<h1>Hello ${employee.employeeName}</h1>
            <p>Please click the button below to reset your password:</p>
            <a href="http://localhost:8000/reset-password?userId=${employee._id}&forgotPasswordId=${employee.forgotPasswordId}">
              Reset Password
            </a>`,
-  })  
-}
-
+  })
+};
 
 export const resetPassword = async (req, res) => {
   console.log(req.body)
   const { userId } = req.query;
   console.log(req.query)
-  try{
+  try {
     const data = await changePasswordByPremission(req.body, req.query)
     console.log(data)
     res.status(200).json({
@@ -73,19 +102,18 @@ export const resetPassword = async (req, res) => {
     })
 
   } catch (error) {
-  res.status(500).json({
+    res.status(500).json({
       success: false,
       msg: "error",
     })
 
   }
 
-}
-
+};
 
 export const verifyToken = async (req, res) => {
   console.log("TOKEN........");
-  
+
   try {
     const { token } = req.cookies;
 
@@ -94,7 +122,7 @@ export const verifyToken = async (req, res) => {
     const data = jwt.verify(token, "Xn5&v9@z#G%hJq!Rk1tW*Z^a4Lb$NcP+Ym2o8Us0pTc7EdF");
 
     if (!data) throw new Error("Token Not Valid")
- 
+
     res.status(200).json({
       success: true,
       msg: "Auth success",
