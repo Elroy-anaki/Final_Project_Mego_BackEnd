@@ -41,7 +41,6 @@ export const getAllMeals = async (req, res) => {
 
   try {
     const countMeals = await Meal.countDocuments();
-
     const meals = await Meal.find().populate('mealCategories', "categoryName").skip((page - 1) * limit).limit(limit);
     console.log(meals);
 
@@ -62,12 +61,8 @@ export const getAllMeals = async (req, res) => {
 
 export const getMealsByCategory = async (req, res) => {
   const { categoryId } = req.params;
-  console.log('jjjj',categoryId)
   try {
-
     const meals = await Meal.find({ 'mealCategories': categoryId});
-console.log("fffffff",meals)
-
     res.status(200).json({
       success: true,
       msg: "Get meal success by category",
@@ -153,7 +148,7 @@ export const autoComplete = async (req, res) => {
   }
 
 
-}
+};
 
 export const getAllReviewsByMealId = async (req, res) => {
   console.log("get reviews...")
