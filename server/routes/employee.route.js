@@ -4,6 +4,7 @@ import {
   signIn,
   getAllEmployees,
   getEmployeeById,
+  autoComplete,
   editEmployeeById,
   deleteEmployeeById
 } from "../controllers/employee.controller.js";
@@ -18,6 +19,8 @@ router.post("/sign-in", signIn);
 router.get("/get-all-employees", getAllEmployees);
 
 router.get("/get-employee-by-id/:id", getEmployeeById);
+
+router.get('/auto-complete', autoComplete)
 
 router.put("/edit-employee-by-id/:id", editEmployeeById)
 

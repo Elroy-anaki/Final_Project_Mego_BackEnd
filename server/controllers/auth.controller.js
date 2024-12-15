@@ -84,6 +84,8 @@ export const resetPassword = async (req, res) => {
 
 
 export const verifyToken = async (req, res) => {
+  console.log("TOKEN........");
+  
   try {
     const { token } = req.cookies;
 
@@ -107,8 +109,7 @@ export const verifyToken = async (req, res) => {
   }
 };
 
-export const logOut = async (req, res) => {
-  // console.log("nnnnn",req)
+export const signOut = async (req, res) => {
   try {
     res.clearCookie("token", {
       httpOnly: true,
@@ -117,13 +118,12 @@ export const logOut = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      msg: "Success log Out ",
-      // data: req.user.user
+      msg: "Success Sign Out ",
     });
   } catch (error) {
     res.status(401).json({
       success: false,
-      msg: "not Success Auth User",
+      msg: " Sign Out Failed",
       error: error.msg || error,
     });
   }

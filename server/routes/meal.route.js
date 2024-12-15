@@ -3,6 +3,7 @@ import {
   addMeal,
   getAllMeals,
   getMealById,
+  autoComplete,
   getAllReviewsByMealId,
   deleteMealById,
   editMealById
@@ -18,6 +19,8 @@ router.get("/get-all-meals", getAllMeals);
 router.get("/get-meal-by-id/:id", getMealById);
 
 router.get("/get-all-reviews-by-id/:id", getAllReviewsByMealId);
+
+router.get("/auto-complete", autoComplete)
 
 router.put("/edit-meal-by-id/:id", upload.single("mealImage"), editMealById)
 

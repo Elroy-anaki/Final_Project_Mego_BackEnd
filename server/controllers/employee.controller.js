@@ -82,17 +82,25 @@ export const signIn = async (req, res) => {
 
 export const getAllEmployees = async (req, res) => {
   console.log("employees")
+  const { limit , page } = req.query;
+
   
   try {
-    const employes = await Employee.find();
-    console.log(employes)
-    return res
-      .status(200)
-      .json({ success: true, msg: "success get all employees", data: employes });
+    const countEmployees = await Employee.countDocuments();
+    console.log("countEmployees", countEmployees)
+
+    const employees = await Employee.find().skip((page - 1) * limit).limit(limit);
+    console.log(employees)
+    res.status(200).json({
+       success: true, 
+       msg: "success get all employees", 
+       data: employees ,
+       count: countEmployees
+      });
   }
   catch (error) {
     console.log(error);
-    return res.status(404).json({
+    res.status(404).json({
       success: false,
       msg: "not success get all employees",
       error,
@@ -120,6 +128,56 @@ export const getEmployeeById = async (req, res) => {
   }
 };
 
+export const autoComplete = async (req, res) => {
+  const { query } = req.query
+  console.log(query)
+  console.log("XXXXXXXXXXXXXXXXXXX")
+
+  const pipeline = [];
+
+  pipeline.push({
+    $search: {
+      index: 'autoCompleteEmployees',
+      autocomplete: {
+        query: query,
+        path: 'employeeName',
+        tokenOrder: 'sequential',
+      }
+    }
+  });
+  pipeline.push({
+    $project: {
+      _id: 1,
+      score: { $meta: 'searchScore' },
+      employeeName: 1,
+      employeesEmail: 1,
+      employeePassword: 1,
+      premission: 1
+    }
+  });
+  pipeline.push({
+    $limit: 5
+  });
+
+  try {
+    const employees = await Employee.aggregate(pipeline).sort({ score: - 1 })
+    res.status(200).json({
+      success: true,
+      msg: "Take Suggestions",
+      data: employees
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      success: true,
+      msg: "Error",
+      error: error
+    })
+  }
+
+
+};
+
 export const editEmployeeById = async (req, res) => {
   console.log("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG")
   console.log(req.params.id)
@@ -145,7 +203,8 @@ export const editEmployeeById = async (req, res) => {
   }
   
   return
-}
+};
+
 export const deleteEmployeeById = async (req, res) => {
   console.log(req.params.id);
   try {
@@ -164,6 +223,6 @@ export const deleteEmployeeById = async (req, res) => {
     })
     
   }
-}
+};
 
 

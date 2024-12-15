@@ -37,7 +37,7 @@ export const addMeal = async (req, res) => {
 };
 
 export const getAllMeals = async (req, res) => {
-  const { limit , page } = req.query;
+  const { limit, page } = req.query;
 
   try {
     const countMeals = await Meal.countDocuments();
@@ -81,6 +81,58 @@ export const getMealById = async (req, res) => {
   }
 };
 
+export const autoComplete = async (req, res) => {
+  const { query } = req.query
+  console.log(query)
+
+  const pipeline = [];
+
+  pipeline.push({
+    $search: {
+      index: 'autoCompleteMeals',
+      autocomplete: {
+        query: query,
+        path: 'mealName',
+        tokenOrder: 'sequential',
+      }
+    }
+  });
+  pipeline.push({
+    $project: {
+      _id: 1,
+      score: { $meta: 'searchScore' },
+      mealName: 1,
+      mealPrice: 1,
+      mealImage: 1,
+      reviews: 1,
+      ingredients: 1,
+      amoutnOfCalories: 1,
+      mealCategories: 1
+    }
+  });
+  pipeline.push({
+    $limit: 5
+  });
+
+  try {
+    const meals = await Meal.aggregate(pipeline).sort({ score: - 1 })
+    res.status(200).json({
+      success: true,
+      msg: "Take Suggestions",
+      data: meals
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      success: true,
+      msg: "Error",
+      error: error
+    })
+  }
+
+
+}
+
 export const getAllReviewsByMealId = async (req, res) => {
   console.log("get reviews...")
   try {
@@ -113,9 +165,9 @@ export const editMealById = async (req, res) => {
     // if (!existingMeal) { throw new Error("The meal doesn't exist!") }
 
     // const mealImage = existingMeal.mealImage;
-    if(!req.file) delete req.body.mealImage
+    if (!req.file) delete req.body.mealImage
 
-    const editedMeal = await Meal.findByIdAndUpdate(id,req.body,{ new: true })
+    const editedMeal = await Meal.findByIdAndUpdate(id, req.body, { new: true })
 
     res.status(204).json({
       success: true,
