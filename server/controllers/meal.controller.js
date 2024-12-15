@@ -60,6 +60,28 @@ export const getAllMeals = async (req, res) => {
   }
 };
 
+export const getMealsByCategory = async (req, res) => {
+  const { categoryId } = req.params;
+  console.log('jjjj',categoryId)
+  try {
+
+    const meals = await Meal.find({ 'mealCategories': categoryId});
+console.log("fffffff",meals)
+
+    res.status(200).json({
+      success: true,
+      msg: "Get meal success by category",
+      data: meals
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      msg: "Failed to get meals.",
+      error: error.message || error,
+    });
+  }
+};
+
 export const getMealById = async (req, res) => {
   try {
     const { id } = req.params;
