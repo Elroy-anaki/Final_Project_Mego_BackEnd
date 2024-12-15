@@ -89,7 +89,7 @@ export const editOrderById = async (req, res) => {
   }
   
   return
-}
+};
 
 export const deleteEmployeeById = async (req, res) => {
   console.log(req.params.id);
@@ -109,6 +109,6 @@ export const deleteEmployeeById = async (req, res) => {
     })
     
   }
-}
+};
 
 

@@ -131,7 +131,6 @@ export const getEmployeeById = async (req, res) => {
 export const autoComplete = async (req, res) => {
   const { query } = req.query
   console.log(query)
-  console.log("XXXXXXXXXXXXXXXXXXX")
 
   const pipeline = [];
 
