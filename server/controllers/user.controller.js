@@ -1,15 +1,14 @@
 import User from "../models/user.model.js";
-import { compare } from "bcrypt";
+import { compare, hash } from "bcrypt";
 import { jwtCookieOptions, generateToken } from "../service/auth.service.js";
 import sendEmailVerification  from "../service/mail.service.js";
+
 
 
 export const signUp = async (req, res) => {
   try {
     console.log(req.body);
     const user = await User.create(req.body);
-    console.log(user);
-    
      sendEmailVerification(user)
      res
       .status(201)
@@ -43,6 +42,7 @@ export const signIn = async (req, res) => {
     const data = generateToken(user);
     const token = data.token;
     const payload = data.payload;
+ 
 
     res.cookie("token", token, jwtCookieOptions);
     res.status(200).json({
@@ -55,11 +55,35 @@ export const signIn = async (req, res) => {
     console.log(error)
     res.status(401).json({
       success: false,
-      msg: "User Sign-in failed",
-      error: error.msg || error,
+      msg: error.message,
+      error: error.message || error
     });
   }
 };
 
+export const editUserDetails = async (req, res) => {
+  console.log(req.body.userPassword)
 
+  !req.body.userPassword  ? delete req.body.userPassword : req.body.userPassword = await hash(req.body.userPassword,10);
+  console.log(req.body)
+
+
+  try {
+    const editedUser = await User.findByIdAndUpdate(req.params.id, {...req.body}, {new: true})
+    
+    res.status(200).json({
+      success: true,
+      msg: "Your Changes Saved!",
+      data: editedUser
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(401).json({
+      success: false,
+      msg: error.message,
+      error: error.message || error
+    });
+    
+  }
+}
 

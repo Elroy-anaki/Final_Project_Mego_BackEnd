@@ -19,7 +19,7 @@ const userSchema = new Schema({
     },
     premission:{
         type:String,
-        default:"Regular",
+        default:"user",
     },
     verify: {
         type: Boolean,
