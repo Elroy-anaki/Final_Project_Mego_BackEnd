@@ -125,22 +125,22 @@ export const editTableByUserId = async (req, res) => {
 
 export const deleteTabelByUserId = async (req, res) => {
       try {
-        const { userId } = req.params; 
+        const { id } = req.params; 
 
 
-        console.log("Searching for table with userId:", userId);
+        console.log("Searching for table with userId:", id);
 
     
 
-    const exist = await Table.find({ userId: userId });
-    console.log("Existing tables:", existingTables);
+    const exist = await Table.find({ userId: id });
+    console.log("Existing tables:", exist);
 
-        const TableToDelete = await Table.findOneAndDelete({ userId: userId });
+        const TableToDelete = await Table.findOneAndDelete({ userId: id });
     
         console.log(TableToDelete)
         if (!TableToDelete) throw "Table not found!"
     
-        res.status(204).json({
+        res.status(201).json({
           success: true,
           msg: "Table deleted!",
           data: TableToDelete

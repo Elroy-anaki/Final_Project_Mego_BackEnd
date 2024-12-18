@@ -4,7 +4,7 @@ import {
   getAllTables,
   getTableByUserId,
   editTableByUserId,
-  deleteTabelByUserId
+  deleteTabelByUserId,
 } from "../controllers/table.controller.js";
 
 
