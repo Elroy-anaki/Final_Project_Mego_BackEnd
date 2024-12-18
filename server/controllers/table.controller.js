@@ -2,7 +2,6 @@ import Total from '../middlewares/total.middleware.js';
 import Table from '../models/table.model.js'
 
 export const createTable = async (req, res) => {
-  
     try {
         const { userId, meals} = req.body;
         const total = await Total(meals)
@@ -36,7 +35,6 @@ export const createTable = async (req, res) => {
 
 export const getAllTables = async (req, res) => {
      
-    
       try {
         const tables = await Table.find()
           .populate({
@@ -97,7 +95,7 @@ export const editTableByUserId = async (req, res) => {
 
         console.log("id",id)
         console.log("meas",meals)
-
+        // Fix NOT By userId but tableId
 
         const total = await Total(meals);
     

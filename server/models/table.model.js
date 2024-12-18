@@ -1,14 +1,11 @@
 import mongoose, { Schema, model } from "mongoose";
 
-
-
 const tableSchema = new Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Users',
         required: true,
         unique: true
-
     },
     guests: {
         type: [String],
