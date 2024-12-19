@@ -1,29 +1,79 @@
 import jwt from "jsonwebtoken";
-import Employee from '../models/emlpoyee.model.js';
+import Employee from "../models/emlpoyee.model.js";
+import User from "../models/user.model.js";
 import transporter from "../config/nodemailer.config.js";
-import { nanoid } from 'nanoid';
-import { verifyEmailByType, changePasswordByPremission } from '../utils/auth.utils.js';
+import { nanoid } from "nanoid";
+import {
+  verifyEmailByType,
+  changePasswordByPremission,
+} from "../utils/auth.utils.js";
+import { sendEmailForGotPassword } from "../service/mail.service.js";
 
 export const emailVerification = async (req, res) => {
-  console.log(req.query)
+  console.log(req.query);
   try {
-    await verifyEmailByType(req.query)
+    await verifyEmailByType(req.query);
     res.status(200).json({
       success: true,
-      msg: "Verify Email Successfully!"
-    })
+      msg: "Verify Email Successfully!",
+    });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(500).json({
       success: false,
       msg: "Not Verify Your Email",
-      error: error
-    })
+      error: error,
+    });
+  }
+};
+export const forogtUserPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) throw new Error("Email is Required!")
+
+    const user = await User.findOne({ userEmail: email });
+
+    if (!user) throw new Error("User not found!")
+
+    user.forgotPasswordId = nanoid();
+    await user.save();
+
+     sendEmailForGotPassword(user)
+
+    return res.status(200).json({
+      success: true,
+      message: "Password reset email sent successfully",
+    });
+  } catch (error) {
+    console.error("Error in forgotUserPassword:", error);
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while processing your request",
+    });
   }
 };
 
+// export const forogtUserPassword = async (req, res) => {
+//   console.log(req.body)
+//   const { email } = req.body;
+//   const user = await User.findOne({ userEmail: email });
+//   user.forgotPasswordId = nanoid();
+//   user.save();
+//   transporter.sendMail({
+//     from: "",
+//     to: user.userEmail,
+//     subject: "Reset Password",
+//     html: `<h1>Hello ${user.userEmail}</h1>
+//            <p>Please click the button below to reset your password:</p>
+//            <a href="http://localhost:8000/reset-password?userId=${user._id}&forgotPasswordId=${user.forgotPasswordId}">
+//              Reset Password
+//            </a>`,
+//   })
+// };
+
 export const forogtPassword = async (req, res) => {
-  console.log(req.body)
+  console.log(req.body);
   const { email } = req.body;
   const employee = await Employee.findOne({ employeeEmail: email });
   employee.forgotPasswordId = nanoid();
@@ -37,30 +87,27 @@ export const forogtPassword = async (req, res) => {
            <a href="http://localhost:8000/reset-password?userId=${employee._id}&forgotPasswordId=${employee.forgotPasswordId}">
              Reset Password
            </a>`,
-  })
+  });
 };
 
 export const resetPassword = async (req, res) => {
-  console.log(req.body)
+  console.log(req.body);
   const { userId } = req.query;
-  console.log(req.query)
+  console.log(req.query);
   try {
-    const data = await changePasswordByPremission(req.body, req.query)
-    console.log(data)
+    const data = await changePasswordByPremission(req.body, req.query);
+    console.log(data);
     res.status(200).json({
       success: true,
       msg: "Password changed!",
-      data: data
-    })
-
+      data: data,
+    });
   } catch (error) {
     res.status(500).json({
       success: false,
       msg: "error",
-    })
-
+    });
   }
-
 };
 
 export const verifyToken = async (req, res) => {
@@ -71,14 +118,17 @@ export const verifyToken = async (req, res) => {
 
     if (!token) throw new Error("Token not Exist");
 
-    const data = jwt.verify(token, "Xn5&v9@z#G%hJq!Rk1tW*Z^a4Lb$NcP+Ym2o8Us0pTc7EdF");
+    const data = jwt.verify(
+      token,
+      "Xn5&v9@z#G%hJq!Rk1tW*Z^a4Lb$NcP+Ym2o8Us0pTc7EdF"
+    );
 
-    if (!data) throw new Error("Token Not Valid")
+    if (!data) throw new Error("Token Not Valid");
 
     res.status(200).json({
       success: true,
       msg: "Auth success",
-      data: data
+      data: data,
     });
   } catch (error) {
     res.status(401).json({
@@ -93,7 +143,7 @@ export const signOut = async (req, res) => {
   try {
     res.clearCookie("token", {
       httpOnly: true,
-      secure: true
+      secure: true,
     });
 
     res.status(200).json({
@@ -108,4 +158,3 @@ export const signOut = async (req, res) => {
     });
   }
 };
-

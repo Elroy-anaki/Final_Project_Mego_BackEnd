@@ -1,8 +1,9 @@
 import { Router } from 'express';
-import { signUp, signIn, editUserDetails } from '../controllers/user.controller.js';
+import { signUp, signIn, editUserDetails ,getAllUsers} from '../controllers/user.controller.js';
 
 const router = Router();
 
+router.get('/get-all-users', getAllUsers);
 
 router.post('/sign-up', signUp);
 

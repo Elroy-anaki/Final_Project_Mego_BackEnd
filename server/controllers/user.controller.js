@@ -1,9 +1,30 @@
 import User from "../models/user.model.js";
 import { compare, hash } from "bcrypt";
 import { jwtCookieOptions, generateToken } from "../service/auth.service.js";
-import sendEmailVerification  from "../service/mail.service.js";
+import {sendEmailVerification}  from "../service/mail.service.js";
 
+export const getAllUsers = async (req,res)=>{
+  try{
+    const users = await User.find();
+    res.status(200).json({
+      success: true,
+      msg: "Users retrieved successfully.",
+      data: users
+      
+    });
 
+  }
+  catch(error){
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      msg: "Failed to retrieve users.",
+      error: error.message || error,
+    });
+    
+  }
+
+}
 
 export const signUp = async (req, res) => {
   try {

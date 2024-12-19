@@ -21,7 +21,7 @@ export const changePasswordByPremission = async (data, queryParams) => {
             return employee;
         }
         if (premission === 'user') {
-            const user = await User.findOne({ id });
+            const user = await User.findOne({_id:queryParams.userId});
             user.userPassword = password;
             user.save();
             return user
@@ -31,6 +31,7 @@ export const changePasswordByPremission = async (data, queryParams) => {
         throw error;
     }
 };
+
 
 export const verifyEmailByType = async (data) => {
     try {
