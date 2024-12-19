@@ -13,21 +13,25 @@ export function sendEmailVerification (user) {
     })
 }
 
-export function sendEmailForGotPassword (user) {
+export function sendEmailForGotPassword (user,premission) {
    transporter.sendMail({
-    from: process.env.EMAIL_FROM || "your-email@example.com", // כדאי להגדיר ב-.env
-    to: user.userEmail,
+    from: process.env.EMAIL_FROM || "your-email@example.com",
+    to: premission === "user" ? user.userEmail : user.employeeEmail,
     subject: "Reset Password",
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h1 style="color: #333;">Reset Your Password</h1>
-        <p>Hello ${user.userEmail},</p>
+        <p>Hello ${ premission === "user" ? user.userName : user.employeeName},</p>
         <p>We received a request to reset your password. Click the button below to set a new password:</p>
         <div style="text-align: center; margin: 30px 0;">
-          <a href="http://localhost:8001/auth/reset-password?userId=${user._id}&forgotPasswordId=${user.forgotPasswordId}"
+        ${ premission === "user" ? `<a href="http://localhost:8001/auth/reset-password?userId=${user._id}&forgotPasswordId=${user.forgotPasswordId}"
              style="background-color: #FF6B00; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px;">
             Reset Password
-          </a>
+          </a>` :`<a href="http://localhost:8000/auth/reset-password?userId=${user._id}&forgotPasswordId=${user.forgotPasswordId}"
+             style="background-color: #0A2647; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px;">
+            Reset Password
+          </a>`}  
+          
         </div>
         <p style="color: #666; font-size: 14px;">
           If you didn't request this password reset, you can safely ignore this email.

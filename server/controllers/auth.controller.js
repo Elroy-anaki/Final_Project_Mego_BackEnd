@@ -26,68 +26,62 @@ export const emailVerification = async (req, res) => {
     });
   }
 };
-export const forogtUserPassword = async (req, res) => {
-  try {
-    const { email } = req.body;
-
-    if (!email) throw new Error("Email is Required!")
-
-    const user = await User.findOne({ userEmail: email });
-
-    if (!user) throw new Error("User not found!")
-
-    user.forgotPasswordId = nanoid();
-    await user.save();
-
-     sendEmailForGotPassword(user)
-
-    return res.status(200).json({
-      success: true,
-      message: "Password reset email sent successfully",
-    });
-  } catch (error) {
-    console.error("Error in forgotUserPassword:", error);
-    return res.status(500).json({
-      success: false,
-      message: "An error occurred while processing your request",
-    });
-  }
-};
-
-// export const forogtUserPassword = async (req, res) => {
-//   console.log(req.body)
-//   const { email } = req.body;
-//   const user = await User.findOne({ userEmail: email });
-//   user.forgotPasswordId = nanoid();
-//   user.save();
-//   transporter.sendMail({
-//     from: "",
-//     to: user.userEmail,
-//     subject: "Reset Password",
-//     html: `<h1>Hello ${user.userEmail}</h1>
-//            <p>Please click the button below to reset your password:</p>
-//            <a href="http://localhost:8000/reset-password?userId=${user._id}&forgotPasswordId=${user.forgotPasswordId}">
-//              Reset Password
-//            </a>`,
-//   })
-// };
-
 export const forogtPassword = async (req, res) => {
+
+
   console.log(req.body);
-  const { email } = req.body;
-  const employee = await Employee.findOne({ employeeEmail: email });
-  employee.forgotPasswordId = nanoid();
-  employee.save();
-  transporter.sendMail({
-    from: "",
-    to: employee.employeeEmail,
-    subject: "Reset Password",
-    html: `<h1>Hello ${employee.employeeName}</h1>
-           <p>Please click the button below to reset your password:</p>
-           <a href="http://localhost:8000/reset-password?userId=${employee._id}&forgotPasswordId=${employee.forgotPasswordId}">
-             Reset Password
-           </a>`,
-  });
+  
+  const { email, premission } = req.body;
+
+  if (premission === "employee") {
+    try {
+      if (!email) throw new Error("Email is Required!");
+
+      const user = await Employee.findOne({ employeeEmail: email });
+
+      if (!user) throw new Error("employee not found!");
+
+      user.forgotPasswordId = nanoid();
+      await user.save();
+
+      sendEmailForGotPassword(user,premission);
+
+      return res.status(200).json({
+        success: true,
+        message: "Password reset email sent successfully",
+      });
+    } catch (error) {
+      console.error("Error in forgotUserPassword:", error);
+      return res.status(500).json({
+        success: false,
+        message: "An error occurred while processing your request",
+      });
+    }
+  } else {
+    try {
+      if (!email) throw new Error("Email is Required!");
+
+      const user = await User.findOne({ userEmail: email });
+
+      if (!user) throw new Error("User not found!");
+
+      user.forgotPasswordId = nanoid();
+      await user.save();
+
+      sendEmailForGotPassword(user,premission);
+
+      return res.status(200).json({
+        success: true,
+        message: "Password reset email sent successfully",
+      });
+    } catch (error) {
+      console.error("Error in forgotUserPassword:", error);
+      return res.status(500).json({
+        success: false,
+        message: "An error occurred while processing your request",
+      });
+    }
+  }
 };
 
 export const resetPassword = async (req, res) => {
