@@ -13,7 +13,7 @@ const tableSchema = new Schema({
     },
     meals: [
         {
-            id: {
+            meal: {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'Meals',
             },
@@ -23,7 +23,7 @@ const tableSchema = new Schema({
             }
         }
     ],
-    total: {
+    totalPrice: {
         type: Number,
         required: true
     }

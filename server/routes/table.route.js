@@ -3,7 +3,7 @@ import {
   createTable,
   getAllTables,
   getTableByUserId,
-  editTableByUserId,
+  editTableById,
   deleteTabelByUserId,
 } from "../controllers/table.controller.js";
 
@@ -12,13 +12,13 @@ const router = Router();
 
 router.post("/create-table", createTable);
 
-router.get("/get-all", getAllTables);
+router.get("/get-all-tables", getAllTables);
 
-router.get("/get-by-user-id/:id", getTableByUserId);
+router.get("/get-table-by-user-id/:userId", getTableByUserId);
 
-router.put("/edit-by-user-id/:id", editTableByUserId);
+router.put("/edit-table-by-id/:id", editTableById);
 
-router.delete("/delete-by-user-id/:id", deleteTabelByUserId);
+router.delete("/delete-table-by-id/:id", deleteTabelByUserId);
 
 
 
