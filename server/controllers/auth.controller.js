@@ -48,13 +48,13 @@ export const forogtPassword = async (req, res) => {
 
       return res.status(200).json({
         success: true,
-        message: "Password reset email sent successfully",
+        msg: "Password reset email sent successfully",
       });
     } catch (error) {
       console.error("Error in forgotUserPassword:", error);
       return res.status(500).json({
         success: false,
-        message: "An error occurred while processing your request",
+        msg: "An error occurred while processing your request",
       });
     }
   } else {
@@ -72,13 +72,13 @@ export const forogtPassword = async (req, res) => {
 
       return res.status(200).json({
         success: true,
-        message: "Password reset email sent successfully",
+        msg: "Password reset email sent successfully",
       });
     } catch (error) {
       console.error("Error in forgotUserPassword:", error);
       return res.status(500).json({
         success: false,
-        message: "An error occurred while processing your request",
+        msg: "An error occurred while processing your request",
       });
     }
   }

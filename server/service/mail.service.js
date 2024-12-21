@@ -27,7 +27,7 @@ export function sendEmailForGotPassword (user,premission) {
         ${ premission === "user" ? `<a href="http://localhost:8001/auth/reset-password?userId=${user._id}&forgotPasswordId=${user.forgotPasswordId}"
              style="background-color: #FF6B00; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px;">
             Reset Password
-          </a>` :`<a href="http://localhost:8000/auth/reset-password?userId=${user._id}&forgotPasswordId=${user.forgotPasswordId}"
+          </a>` :`<a href="http://localhost:8000/reset-password?userId=${user._id}&forgotPasswordId=${user.forgotPasswordId}"
              style="background-color: #0A2647; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px;">
             Reset Password
           </a>`}  
