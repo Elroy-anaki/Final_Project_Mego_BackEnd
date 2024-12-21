@@ -2,7 +2,7 @@ import { Router } from "express";
 import {
   addOrder,
   getAllOrders,
-  getOrderById,
+  getOrderByUserId,
   editOrderById,
   deleteOrderById
 } from "../controllers/order.controller.js";
@@ -14,7 +14,7 @@ router.post("/add-order", addOrder);
 
 router.get("/get-all-orders", getAllOrders);
 
-router.get("/get-order-by-id/:id", getOrderById);
+router.get("/get-order-by-user-id/:id", getOrderByUserId);
 
 router.put("/edit-order-by-id/:id", editOrderById)
 
