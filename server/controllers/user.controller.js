@@ -35,10 +35,10 @@ export const signUp = async (req, res) => {
       .status(201)
       .json({ success: true, msg: "success add user", data: user });
   } catch (error) {
-    console.log(error);
+    console.log(error.code);
      res.status(500).json({
       success: false,
-      msg: "not success add user",
+      msg: error.code === 11000 ? 'This email exist ' : "Sign Up Failed",
       error,
     });
   }

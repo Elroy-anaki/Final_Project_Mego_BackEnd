@@ -28,69 +28,37 @@ export const emailVerification = async (req, res) => {
 };
 export const forogtPassword = async (req, res) => {
 
-
-  console.log(req.body);
-  
   const { email, premission } = req.body;
 
-  if (premission === "employee") {
-    try {
-      if (!email) throw new Error("Email is Required!");
+  try {
 
-      const user = await Employee.findOne({ employeeEmail: email });
+    const askChangePassword = premission === 'employee' ?
+      await Employee.findOne({ employeeEmail: email })
+      : await User.findOne({ userEmail: email });
 
-      if (!user) throw new Error("employee not found!");
+    askChangePassword.forgotPasswordId = nanoid();
+    askChangePassword.save();
 
-      user.forgotPasswordId = nanoid();
-      await user.save();
+    sendEmailForGotPassword(askChangePassword, premission);
+    res.status(200).json({
+      success: true,
+      msg: "Password reset email sent successfully",
+    });
 
-      sendEmailForGotPassword(user,premission);
+  } catch (error) {
+    console.error("Error", error);
+    return res.status(500).json({
+      success: false,
+      msg: error.message || 'request failed',
+    });
 
-      return res.status(200).json({
-        success: true,
-        msg: "Password reset email sent successfully",
-      });
-    } catch (error) {
-      console.error("Error in forgotUserPassword:", error);
-      return res.status(500).json({
-        success: false,
-        msg: "An error occurred while processing your request",
-      });
-    }
-  } else {
-    try {
-      if (!email) throw new Error("Email is Required!");
-
-      const user = await User.findOne({ userEmail: email });
-
-      if (!user) throw new Error("User not found!");
-
-      user.forgotPasswordId = nanoid();
-      await user.save();
-
-      sendEmailForGotPassword(user,premission);
-
-      return res.status(200).json({
-        success: true,
-        msg: "Password reset email sent successfully",
-      });
-    } catch (error) {
-      console.error("Error in forgotUserPassword:", error);
-      return res.status(500).json({
-        success: false,
-        msg: "An error occurred while processing your request",
-      });
-    }
   }
+
 };
 
 export const resetPassword = async (req, res) => {
-  console.log(req.body);
-  const { userId } = req.query;
-  console.log(req.query);
   try {
     const data = await changePasswordByPremission(req.body, req.query);
-    console.log(data);
     res.status(200).json({
       success: true,
       msg: "Password changed!",
@@ -142,13 +110,13 @@ export const signOut = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      msg: "Success Sign Out ",
+      msg: "GoodBye!",
     });
   } catch (error) {
     res.status(401).json({
       success: false,
-      msg: " Sign Out Failed",
-      error: error.msg || error,
+      msg: error.message || " Sign Out Failed",
+      error:  error,
     });
   }
 };
