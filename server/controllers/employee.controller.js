@@ -82,15 +82,16 @@ export const signIn = async (req, res) => {
 
 export const getAllEmployees = async (req, res) => {
   console.log("employees")
-  const { limit , page } = req.query;
+  console.log(req.query)
 
-  
+  const { limit , page, search = 'all' } = req.query;
+  const filterBy = search === 'all' ? {} : {premission: search}
+
   try {
     const countEmployees = await Employee.countDocuments();
-    console.log("countEmployees", countEmployees)
 
-    const employees = await Employee.find().skip((page - 1) * limit).limit(limit);
-    console.log(employees)
+    const employees = await Employee.find(filterBy).skip((page - 1) * limit).limit(limit);
+    console.log("employees", employees)
     res.status(200).json({
        success: true, 
        msg: "success get all employees", 

@@ -1,10 +1,12 @@
 import Restaurant from '../models/restaurant.model.js';
 import cloudinary from '../config/cloudinary.config.js';
+import {createAvailabilityPipeline} from '../utils/restaurant.js'
+
 
 export const addRestaurant = async (req, res) => {
     try {
         if (!req.files || !req.files.restaurantImage || !req.files.restaurantLogo) {
-            return res.status(400).json({
+            res.status(400).json({
                 success: false,
                 msg: 'Both restaurant image and logo are required!'
             });
@@ -39,7 +41,6 @@ export const addRestaurant = async (req, res) => {
 export const getRestaurant = async (req, res) => {
     try {
         const [restaurant] = await Restaurant.find()
-
         res.status(200).json({
             success: true,
             msg: 'Restaurant is here!',
@@ -51,9 +52,37 @@ export const getRestaurant = async (req, res) => {
             success: false,
             msg: 'Not found restaurant!',
             error: error
-
         })
-
     }
+};
 
-}
+export const getRemainingSeats = async (req, res) => {
+    const { date, time } = req.body;
+    console.log(date, time)
+    try {
+        if (!date || !time) throw new Error("Enter date and time")
+        const pipeline = createAvailabilityPipeline(date, time)
+        const remainingSeats = await Restaurant.aggregate(pipeline)
+        if(remainingSeats.length === 0){
+            res.status(200).json({
+                success: true,
+                msg: "Take",
+                data: [{time: time,remaining:50 }]
+            });
+            return
+        }
+        res.status(200).json({
+            success: true,
+            msg: "Take",
+            data: remainingSeats
+        });
+
+    } catch (error) {
+        console.error("error", error);
+        res.status(500).json({
+            success: false,
+            msg: error.message || "Enter date and time"
+        })
+    }
+};
+

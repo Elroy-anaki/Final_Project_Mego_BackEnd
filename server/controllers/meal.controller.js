@@ -37,11 +37,11 @@ export const addMeal = async (req, res) => {
 };
 
 export const getAllMeals = async (req, res) => {
-  const { limit, page } = req.query;
+  const { limit, page, search = 'mealName', sortBy = '1', gt = 0 } = req.query;
 
   try {
     const countMeals = await Meal.countDocuments();
-    const meals = await Meal.find().populate('mealCategories', "categoryName").skip((page - 1) * limit).limit(limit);
+    const meals = await Meal.find().sort({[search]: Number(sortBy)}).populate('mealCategories', "categoryName").skip((page - 1) * limit).limit(limit);
     console.log(meals);
 
     res.status(200).json({

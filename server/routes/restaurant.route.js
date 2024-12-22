@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import upload from '../config/multer.config.js';
-import { addRestaurant, getRestaurant } from '../controllers/restaurant.controller.js';
+import { addRestaurant, getRestaurant, getRemainingSeats } from '../controllers/restaurant.controller.js';
 
 
 const router = Router();
@@ -12,6 +12,8 @@ router.post('/add-restaurant', upload.fields([
 ]), addRestaurant);
 
 router.get('/get-restaurant', getRestaurant);
+
+router.post('/get-remaining-seats', getRemainingSeats);
 
 
 export default router;
