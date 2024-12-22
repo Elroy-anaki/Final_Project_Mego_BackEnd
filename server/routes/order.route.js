@@ -14,7 +14,7 @@ router.post("/add-order", addOrder);
 
 router.get("/get-all-orders", getAllOrders);
 
-router.get("/get-order-by-user-id/:id", getOrderByUserId);
+router.get("/get-order-by-user-id/:userId", getOrderByUserId);
 
 router.put("/edit-order-by-id/:id", editOrderById)
 

@@ -1,6 +1,6 @@
 import mongoose, { Schema, model } from "mongoose";
 
-const orderSchema = new Schema(
+const OrderTableSchema = new Schema(
   {
     dateTime: {
       date: {
@@ -32,10 +32,10 @@ const orderSchema = new Schema(
         match: /^(0[1-9]|1[0-2])\/([0-9]{2})$/,
       },
     },
-    userID: {
+    userId: [{
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Ueals",
-    },
+      ref: "Users",
+    }],
 
     status: {
       type: String,
@@ -48,7 +48,7 @@ const orderSchema = new Schema(
 
     meals: [
       {
-        meal: {
+        mealId: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "Meals",
         },
@@ -63,6 +63,6 @@ const orderSchema = new Schema(
   { timestamps: true }
 );
 
-const Order = model("Order", orderSchema);
+const Order = model("OrderTable", OrderTableSchema);
 
 export default Order;
