@@ -33,9 +33,7 @@ export const signIn = async (req, res) => {
   console.log(req.body)
   try {
     const { employeePassword, employeeEmail } = req.body;
-    console.log("employeePassword:", employeePassword)
-    console.log("employeeEmail:", employeeEmail)
-
+    
     if (!employeePassword || !employeeEmail)
       throw new Error("all fields required!");
 
@@ -74,8 +72,8 @@ export const signIn = async (req, res) => {
     console.log(error)
     res.status(401).json({
       success: false,
-      msg: "not Success Login User",
-      error: error.msg || error,
+      msg: error.message || "not Success Login User",
+      error: error,
     });
   }
 };
