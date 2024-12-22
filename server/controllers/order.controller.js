@@ -1,15 +1,20 @@
 import Order from "../models/order.model.js";
+// import Cart from "pass ";
 
 
 export const addOrder = async (req, res) => {
   try {
     console.log(req.body);
+    const {newOrder , cartID} = req.body;
    
-    const order = await Order.create(req.body);
+    const order = await Order.create(newOrder);
+    await Cart.findByIdAndDelete(cartID);
+
+
     res
-      .status(201).json({
+      .status(200).json({
         success: true,
-        msg: "success add order",
+        msg: "success add order abd delete cart",
         data: order
       });
   } catch (error) {
@@ -43,19 +48,19 @@ export const getAllOrders = async (req, res) => {
   }
 };
 
-export const getOrderById = async (req, res) => {
+export const getOrderByUserId = async (req, res) => {
   try {
-    const order = await Order.findById(req.params.id);
+    const order = await Order.findOne({userID:req.params.id});
     res
       .status(200)
-      .json({ success: true, msg: "success get order by id", data: order });
+      .json({ success: true, msg: "success get order by user id", data: order });
 
   }
   catch (error) {
     console.log(error);
     res.status(404).json({
       success: false,
-      msg: "not success get order by id",
+      msg: "not success get order by user id",
       error,
     });
 
@@ -68,10 +73,11 @@ export const editOrderById = async (req, res) => {
   console.log(req.body)
   try {
     const editedOrder = await Order.findByIdAndUpdate(req.params.id,
-        { status: req.body.status },
+      
+        { $set: req.body },
         { new: true });
     
-    res.status(204).json({
+    res.status(200).json({
       success: true,
       msg: "Order Edited!",
       data: editedOrder
@@ -95,7 +101,7 @@ export const deleteOrderById = async (req, res) => {
   console.log(req.params.id);
   try {
     const orderToDelete = await Order.findByIdAndDelete(req.params.id)
-    res.status(204).json({
+    res.status(200).json({
       success: true,
       msg: "Order deleted successfully!",
       data: orderToDelete

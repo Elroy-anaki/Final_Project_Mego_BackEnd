@@ -184,11 +184,13 @@ export const editEmployeeById = async (req, res) => {
   console.log(req.body)
   try {
     const editEmployee = await Employee.findByIdAndUpdate(req.params.id, req.body, {new:true});
-    res.status(204).json({
+    res.status(200).json({
       success: true,
       msg: "Employee Edited!",
       data: editEmployee
     })
+    console.log(editEmployee);
+    
     
   } catch (error) {
     console.log(error);
