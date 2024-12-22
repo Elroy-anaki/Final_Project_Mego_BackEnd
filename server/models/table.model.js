@@ -1,14 +1,11 @@
 import mongoose, { Schema, model } from "mongoose";
 
-
-
 const tableSchema = new Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Users',
         required: true,
         unique: true
-
     },
     guests: {
         type: [String],
@@ -16,7 +13,7 @@ const tableSchema = new Schema({
     },
     meals: [
         {
-            id: {
+            meal: {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'Meals',
             },
@@ -26,7 +23,7 @@ const tableSchema = new Schema({
             }
         }
     ],
-    total: {
+    totalPrice: {
         type: Number,
         required: true
     }
