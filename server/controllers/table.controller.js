@@ -15,8 +15,8 @@ export const createTable = async (req, res) => {
     console.log("error", error);
     res.status(500).json({
       success: false,
-      msg: "Failed to create table.",
-      error: error.message || error,
+      msg: error.message || "Failed to create table.",
+      error:  error,
     });
   }
 };
@@ -36,8 +36,8 @@ export const getAllTables = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      msg: "Failed to get all tables.",
-      error: error.message || error,
+      msg: error.message || "Failed to get all tables.",
+      error: error,
     });
   }
 };
@@ -60,8 +60,8 @@ export const getTableByUserId = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      msg: "Failed to get table.",
-      error: error.message || error,
+      msg: error.message || "Failed to get table.",
+      error:  error,
     });
   }
 };
@@ -77,9 +77,6 @@ export const editTableById = async (req, res) => {
     updatedTable.meals = req.body
     updatedTable.save();
     console.log("res",updatedTable.meals)
-
-
-
 
     res.status(200).json({
       success: true,
@@ -105,7 +102,7 @@ export const deleteTabelByUserId = async (req, res) => {
     res.status(201).json({
       success: true,
       msg: "Table deleted!",
-      data: TableToDelete
+      data: deletedTable
     });
   } catch (error) {
     res.status(500).json({
