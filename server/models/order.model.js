@@ -32,10 +32,17 @@ const OrderTableSchema = new Schema(
         match: /^(0[1-9]|1[0-2])\/([0-9]{2})$/,
       },
     },
-    userId: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Users",
-    }],
+    user: {
+      name: {
+        type: String,
+        required: true,
+      },
+      userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Users",
+        required: false,
+      },
+    },
 
     status: {
       type: String,
@@ -43,21 +50,44 @@ const OrderTableSchema = new Schema(
       default: "pending",
     },
     cart: {
-      
+      userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Users",
+        required: false,
+      },
+      guests: {
+        type: [String],
+        required: false,
+      },
+      meals: [
+        {
+          mealId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Meals",
+            required: false,
+          },
+
+          quantity: {
+            type: Number,
+            required: false,
+          },
+        },
+      ],
     },
 
-    meals: [
-      {
-        mealId: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Meals",
-        },
-        quantity: Number,
-      },
-    ],
+    // meals: [
+    //   {
+    //     mealId: {
+    //       type: mongoose.Schema.Types.ObjectId,
+    //       ref: "Meals",
+    //     },
+    //     quantity: Number,
+    //   },
+    // ],
 
     specialRequests: {
       type: String,
+      required: false,
     },
   },
   { timestamps: true }

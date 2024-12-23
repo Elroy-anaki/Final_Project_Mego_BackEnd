@@ -13,7 +13,7 @@ const tableSchema = new Schema({
     },
     meals: [
         {
-            meal: {
+            mealId: {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'Meals',
             },
