@@ -1,19 +1,23 @@
 import mongoose, { Schema, model } from "mongoose";
 
 const tableSchema = new Schema({
-    userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Users',
-        required: true,
-        unique: true
+    user: {
+        userId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Users',
+            required: true,
+            unique: true,
+            default: null
+        },
+        userName: { type: String, required: true }
     },
-    guests: {
+    SharedWith: {
         type: [String],
         default: []
     },
     meals: [
         {
-            mealId: {
+            meal: {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'Meals',
             },
@@ -31,7 +35,19 @@ const tableSchema = new Schema({
 }, { timestamps: true })
 
 
-
+tableSchema.pre('save', async function (next) {
+    await this.populate('meals.meal');
+    
+    const totalPrice = this.meals.reduce((acc, mealItem) => {
+      const mealPrice = mealItem.meal.mealPrice || 0; 
+      return acc + mealPrice * mealItem.quantity;
+    }, 0);
+  
+    this.totalPrice = totalPrice;
+  
+    console.log("Calculated Total Price:", totalPrice);
+    next();
+  });
 
 const Table = model("Tables", tableSchema);
 

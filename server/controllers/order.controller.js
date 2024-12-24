@@ -1,19 +1,59 @@
 import Order from "../models/order.model.js";
-import Table from "../models/table.model.js";
+import Restaurant from "../models/restaurant.model.js";
+import { buildOrderObj } from '../utils/order.utils.js'
+
+
 
 export const addOrder = async (req, res) => {
   try {
-    console.log(req.body);
-    const { newOrder, cartId } = req.body;
-    console.log("new order", newOrder);
-    console.log("cart id", cartId);
+    const { order, cartId } = req.body;
 
-    const order = await Order.create(newOrder);
-    await Table.findByIdAndDelete(cartId);
+    const fullOrder = await buildOrderObj(order, cartId);
+    const newOrder = await Order.create(fullOrder);
+
+    const restaurant = await Restaurant.findOne();
+
+    if (!restaurant) throw new Error("Restaurant Not Found!")
+
+    const { dateTime } = newOrder;
+    const { date, time } = dateTime;
+
+    const dateIndex = restaurant.restaurantOccupancyTime.findIndex((entry) => entry.date === date);
+
+    if (dateIndex !== -1) {
+      const slots = restaurant.restaurantOccupancyTime[dateIndex].slots;
+      const slotIndex = slots.findIndex((slot) => slot.time === time);
+
+      if (slotIndex !== -1) {
+        slots[slotIndex].reserved += newOrder.numberOfGuests;
+        slots[slotIndex].remaining -= newOrder.numberOfGuests;
+
+      } else {
+        slots.push({
+          time,
+          reserved: newOrder.numberOfGuests,
+          remaining: restaurant.restaurantMaxOccupancy - newOrder.numberOfGuests,
+        });
+      }
+    } else {
+      restaurant.restaurantOccupancyTime.push({
+        date,
+        slots: [
+          {
+            time,
+            reserved: newOrder.numberOfGuests,
+            remaining: restaurant.restaurantMaxOccupancy - newOrder.numberOfGuests,
+          },
+        ],
+      });
+    }
+
+    await restaurant.save();
+
     res.status(200).json({
       success: true,
       msg: "Create Order successfully",
-      data: order,
+      data: newOrder,
     });
   } catch (error) {
     console.log(error);
@@ -24,6 +64,7 @@ export const addOrder = async (req, res) => {
     });
   }
 };
+
 
 export const getAllOrders = async (req, res) => {
   console.log("orders");
@@ -58,20 +99,21 @@ export const getAllOrders = async (req, res) => {
 };
 
 export const getOrderByUserId = async (req, res) => {
+  console.log(req.params)
   try {
-    const order = await Order.findOne({ userId: req.params.id })
+    const order = await Order.findOne({ "user.userId": req.params.userId })
       .populate({
-        path: "cart.userId",
+        path: "user.userId",
         select: "userName userEmail",
       })
       .populate({
-        path: "cart.meals",
+        path: "table.meals",
         populate: {
-          path: "mealId",
+          path: "meal",
           select: "mealName mealPrice mealImage",
         },
       })
-      .exec();
+    console.log(order)
 
     res
       .status(200)

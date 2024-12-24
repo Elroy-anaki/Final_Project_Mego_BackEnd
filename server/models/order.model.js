@@ -33,7 +33,7 @@ const OrderTableSchema = new Schema(
       },
     },
     user: {
-      name: {
+      userName: {
         type: String,
         required: true,
       },
@@ -41,27 +41,23 @@ const OrderTableSchema = new Schema(
         type: mongoose.Schema.Types.ObjectId,
         ref: "Users",
         required: false,
+        default: null
       },
     },
 
     status: {
       type: String,
-      enum: ["pending", "completed", "paid"],
+      enum: ["pending", "completed", "paid", "reviewed"],
       default: "pending",
     },
-    cart: {
-      userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Users",
-        required: false,
-      },
-      guests: {
+    table: {
+      SharedWith: {
         type: [String],
         required: false,
       },
       meals: [
         {
-          mealId: {
+          meal: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Meals",
             required: false,
@@ -75,15 +71,7 @@ const OrderTableSchema = new Schema(
       ],
     },
 
-    // meals: [
-    //   {
-    //     mealId: {
-    //       type: mongoose.Schema.Types.ObjectId,
-    //       ref: "Meals",
-    //     },
-    //     quantity: Number,
-    //   },
-    // ],
+
 
     specialRequests: {
       type: String,
