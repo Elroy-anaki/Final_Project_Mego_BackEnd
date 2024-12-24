@@ -2,7 +2,7 @@ import Review from "../models/review.model.js";
 import Meal from "../models/meal.model.js";
 
 export const addReviews = async (req, res) => {
-  console.log(req.body);
+  console.log("req.body", req.body);
 
   try {
     const newReview = await Review.create(req.body);
@@ -12,6 +12,7 @@ export const addReviews = async (req, res) => {
       {_id:newReview.mealId},
       {$push:{reviews:newReview._id}}
     )
+    console.log(newReview)
  
 
     res.status(201).json({
