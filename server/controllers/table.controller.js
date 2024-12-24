@@ -1,6 +1,7 @@
 import Table from '../models/table.model.js'
 
 export const createTable = async (req, res) => {
+  console.log(req.body)
   try {
   
     const newTable = await Table.create(req.body);

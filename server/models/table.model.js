@@ -7,7 +7,6 @@ const tableSchema = new Schema({
             ref: 'Users',
             required: true,
             unique: true,
-            default: null
         },
         userName: { type: String, required: true }
     },
@@ -29,7 +28,7 @@ const tableSchema = new Schema({
     ],
     totalPrice: {
         type: Number,
-        required: true
+        
     }
 
 }, { timestamps: true })
