@@ -52,7 +52,7 @@ const OrderTableSchema = new Schema(
     },
     table: {
       SharedWith: {
-        type: [String],
+        type: [Object],
         required: false,
       },
       meals: [

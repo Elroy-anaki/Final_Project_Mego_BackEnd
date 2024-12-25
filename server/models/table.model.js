@@ -6,13 +6,12 @@ const tableSchema = new Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Users',
             required: true,
-            unique: true,
             default: null
         },
         userName: { type: String, required: true }
     },
     SharedWith: {
-        type: [String],
+        type: [Object],
         default: []
     },
     meals: [
@@ -29,7 +28,7 @@ const tableSchema = new Schema({
     ],
     totalPrice: {
         type: Number,
-        required: true
+        // required: true
     }
 
 }, { timestamps: true })

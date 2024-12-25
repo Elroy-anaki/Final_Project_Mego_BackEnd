@@ -98,10 +98,13 @@ export const getAllOrders = async (req, res) => {
   }
 };
 
-export const getOrderByUserId = async (req, res) => {
+export const getOrderByOrderId = async (req, res) => {
   console.log(req.params)
+  const {orderId, guestEmail} = req.query;
   try {
-    const order = await Order.findOne({ "user.userId": req.params.userId })
+    const order = await Order.findOne({
+      _id: orderId,
+      "table.SharedWith":{$elemMatch:{ guestEmail: guestEmail, rated: false }} })
       .populate({
         path: "user.userId",
         select: "userName userEmail",
@@ -114,7 +117,7 @@ export const getOrderByUserId = async (req, res) => {
         },
       })
     console.log(order)
-
+      // TODO if the email doesn't exist or rated already
     res
       .status(200)
       .json({
