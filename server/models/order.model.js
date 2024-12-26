@@ -47,7 +47,7 @@ const OrderTableSchema = new Schema(
 
     status: {
       type: String,
-      enum: ["pending", "completed", "paid", "reviewed"],
+      enum: ["pending", "completed", "paid"],
       default: "pending",
     },
     table: {
@@ -69,6 +69,7 @@ const OrderTableSchema = new Schema(
           },
         },
       ],
+      totalPrice: {type: Number, required: true}
     },
 
 
