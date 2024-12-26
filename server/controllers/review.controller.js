@@ -1,10 +1,24 @@
 import Review from "../models/review.model.js";
 import Meal from "../models/meal.model.js";
+import Order from "../models/order.model.js";
 
 export const addReviews = async (req, res) => {
   const reviews = req.body
-  console.log("req.body", reviews); // []
+  console.log("req.body", reviews); 
+  const {orderId, guestEmail} = req.params
+
   try {
+    await Order.updateOne(
+      {
+        _id: orderId,
+        "table.SharedWith": {
+          $elemMatch: { guestEmail: guestEmail, rated: false }, 
+        },
+      },
+      {
+        $set: { "table.SharedWith.$.rated": true }, 
+      }
+    );
     const newReviews = await Review.create(reviews);
     console.log("newReview", newReviews)
     // loop for sum the rating for each meal

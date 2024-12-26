@@ -117,7 +117,8 @@ export const getOrderByOrderId = async (req, res) => {
         },
       })
     console.log(order)
-      // TODO if the email doesn't exist or rated already
+    if(order === null) throw new Error("You've already rated!")
+    
     res
       .status(200)
       .json({
