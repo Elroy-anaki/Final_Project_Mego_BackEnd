@@ -6,7 +6,7 @@ const tableSchema = new Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Users',
             required: true,
-            default: null
+            unique: true,
         },
         userName: { type: String, required: true }
     },
@@ -28,7 +28,7 @@ const tableSchema = new Schema({
     ],
     totalPrice: {
         type: Number,
-        // required: true
+
     }
 
 }, { timestamps: true })
