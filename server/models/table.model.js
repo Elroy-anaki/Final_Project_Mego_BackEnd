@@ -10,9 +10,9 @@ const tableSchema = new Schema({
         },
         userName: { type: String, required: true }
     },
-    SharedWith: {
+    sharedWith: {
         type: [Object],
-        default: []
+        
     },
     meals: [
         {

@@ -1,6 +1,8 @@
 import Table from '../models/table.model.js'
+import {sendInviteToTableEmail} from '../service/mail.service.js'
 
 export const createTable = async (req, res) => {
+  console.log(req.body)
   try {
   
     const newTable = await Table.create(req.body);
@@ -42,13 +44,17 @@ export const getAllTables = async (req, res) => {
   }
 };
 
-export const getTableByUserId = async (req, res) => {
+export const getTableByUserEmail = async (req, res) => {
   try {
-    const { userId } = req.params;
-    console.log(userId)
+    const { userEmail } = req.params;
+    console.log(userEmail)
 
-    const table = await Table.findOne({ "user.userId": userId }).populate({ path: 'meals.meal' })
-    console.log(table)
+    // const table = await Table.findOne({ "user.userId": userId }).populate({ path: 'meals.meal' })
+    // console.log(table)
+    const table = await Table.findOne({
+      "sharedWith":{$elemMatch:{ guestEmail: userEmail, rated: false }} }).populate({ path: 'meals.meal' })
+      // console.log(table)
+      console.log(table)
 
 
     if (!table) throw "Not find table!"
@@ -99,7 +105,31 @@ export const editTableById = async (req, res) => {
   }
 };
 
-export const deleteTabelByUserId = async (req, res) => {
+export const addGuests = async (req, res) => {
+  console.log(req.body)
+  sendInviteToTableEmail(req.body)
+
+  try {
+    await Table.findByIdAndUpdate(req.params.id, {sharedWith: req.body})
+    
+
+    res.status(200).json({
+      success: true,
+      msg: "Added guests successfully",
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(200).json({
+      success: flase,
+      msg: "Added guests failed",
+      error: error
+    })
+
+    
+  }
+}
+
+export const deleteTabelById = async (req, res) => {
   try {
     const { id } = req.params;
 

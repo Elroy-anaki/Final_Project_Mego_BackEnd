@@ -43,3 +43,39 @@ export function sendEmailForGotPassword (user,premission) {
     `,
   });
 }
+
+export function sendInviteToTableEmail(guests) {
+  guests.forEach((guest) => {
+    transporter.sendMail({
+      from: "",
+      to: guest.guestEmail,
+      subject: "Table Invitation",
+      html: `
+        <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+          <div style="background-color: #004080; padding: 20px; color: white; text-align: center; border-radius: 10px 10px 0 0;">
+            <h1 style="margin: 0;">You're Invited!</h1>
+          </div>
+          <div style="padding: 20px; background-color: #fff; border: 1px solid #ccc; border-top: none; border-radius: 0 0 10px 10px;">
+            <p style="font-size: 16px;">Hello,</p>
+            <p style="font-size: 16px;">You have been invited to join a table. Click the button below to view the invitation:</p>
+            <div style="text-align: center; margin: 20px 0;">
+              <a href="http://localhost:8001/home" style="
+                background-color: #ffa500;
+                color: white;
+                text-decoration: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                font-size: 16px;
+                font-weight: bold;
+              ">View Invitation</a>
+            </div>
+            <p style="font-size: 14px; color: #666;">If you didn't request this, you can safely ignore this email.</p>
+          </div>
+          <div style="text-align: center; font-size: 12px; color: #aaa; margin-top: 20px;">
+            <p>© 2024 Your Company. All rights reserved.</p>
+          </div>
+        </div>
+      `,
+    });
+  });
+}
