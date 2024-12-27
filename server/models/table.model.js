@@ -10,9 +10,9 @@ const tableSchema = new Schema({
         },
         userName: { type: String, required: true }
     },
-    SharedWith: {
-        type: [String],
-        default: []
+    sharedWith: {
+        type: [Object],
+        
     },
     meals: [
         {
@@ -28,7 +28,7 @@ const tableSchema = new Schema({
     ],
     totalPrice: {
         type: Number,
-        
+
     }
 
 }, { timestamps: true })

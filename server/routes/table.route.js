@@ -2,9 +2,10 @@ import { Router } from "express";
 import {
   createTable,
   getAllTables,
-  getTableByUserId,
+  getTableByUserEmail,
   editTableById,
-  deleteTabelByUserId,
+  addGuests,
+  deleteTabelById,
 } from "../controllers/table.controller.js";
 
 
@@ -14,11 +15,13 @@ router.post("/create-table", createTable);
 
 router.get("/get-all-tables", getAllTables);
 
-router.get("/get-table-by-user-id/:userId", getTableByUserId);
+router.get("/get-table-by-user-id/:userEmail", getTableByUserEmail);
 
 router.put("/edit-table-by-id/:id", editTableById);
 
-router.delete("/delete-table-by-id/:id", deleteTabelByUserId);
+router.put("/add-guests/:id", addGuests)
+
+router.delete("/delete-table-by-id/:id", deleteTabelById);
 
 
 export default router;

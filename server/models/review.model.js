@@ -1,15 +1,17 @@
 import mongoose, { Schema, model } from "mongoose";
 
 const reviewSchema = new Schema({
-    userName: {
+  user:{
+    name: {
         type: String,
         default: "John Doe"
       },
       userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Users',
-        required: false
-      },
+        required: false,
+        default: null
+      }},
       mealId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Meals',    

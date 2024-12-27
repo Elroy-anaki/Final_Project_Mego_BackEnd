@@ -1,30 +1,53 @@
 import Review from "../models/review.model.js";
 import Meal from "../models/meal.model.js";
+import Order from "../models/order.model.js";
 
 export const addReviews = async (req, res) => {
-  console.log("req.body", req.body);
+  const reviews = req.body
+  console.log("req.body", reviews); 
+  const {orderId, guestEmail} = req.params
 
   try {
-    const newReview = await Review.create(req.body);
+    await Order.updateOne(
+      {
+        _id: orderId,
+        "table.SharedWith": {
+          $elemMatch: { guestEmail: guestEmail, rated: false }, 
+        },
+      },
+      {
+        $set: { "table.SharedWith.$.rated": true }, 
+      }
+    );
+    const newReviews = await Review.create(reviews);
+    console.log("newReview", newReviews)
+    // loop for sum the rating for each meal
+    for(let review of newReviews){
+      console.log("rating", review.rating)
+      // for each value get the mealId
+      const meal = await Meal.findById(review.mealId);
+      meal.reviews.push(review._id);
+      // go to the DB and update (sum) the rating field
+      console.log("before", meal.rating.totalRating)
+      meal.rating.totalRating += review.rating;
+      console.log("after", meal.rating.totalRating)
+      // and again in this iteration sum the number of people
+      meal.rating.numberPeople += 1;
 
+      await meal.save()
+    }
 
-    await Meal.updateOne(
-      {_id:newReview.mealId},
-      {$push:{reviews:newReview._id}}
-    )
-    console.log(newReview)
- 
 
     res.status(201).json({
       success: true,
       msg: "The review has been successfully added.",
-      meal: newReview,
+      reviews: newReviews,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      msg: "The review was not added successfully.",
-      error: error.message || error,
+      msg: error.message || "The review was not added successfully.",
+      error: error,
     });
   }
 };

@@ -39,8 +39,19 @@ const mealSchema = new Schema({
         ],
         required: true,
         default: []
+    },
+    rating: {
+        totalRating: {type: Number, default: 0},
+        numberPeople: {type: Number, default: 0},
+        avgOfRating: {type: Number, default: 0}
     }
 }, { timestamps: true })
+
+mealSchema.pre('save', function(next){
+    this.rating.avgOfRating = (this.rating.totalRating / this.rating.numberPeople)
+    console.log(this.rating.avgOfRating)
+    next()
+})
 
 const Meal = model("Meals", mealSchema);
 

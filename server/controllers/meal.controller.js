@@ -62,7 +62,13 @@ export const getAllMeals = async (req, res) => {
 export const getMealsByCategory = async (req, res) => {
   const { categoryId } = req.params;
   try {
-    const meals = await Meal.find({ 'mealCategories': categoryId});
+    const meals = await Meal.find({ mealCategories: categoryId })
+    .populate({
+      path: 'reviews',
+      select: 'rating comment user.name' 
+    });
+   
+    console.log(meals)
     res.status(200).json({
       success: true,
       msg: "Get meal success by category",

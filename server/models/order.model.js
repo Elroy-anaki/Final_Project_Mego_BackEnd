@@ -47,12 +47,12 @@ const OrderTableSchema = new Schema(
 
     status: {
       type: String,
-      enum: ["pending", "completed", "paid", "reviewed"],
+      enum: ["pending", "completed", "paid"],
       default: "pending",
     },
     table: {
       SharedWith: {
-        type: [String],
+        type: [Object],
         required: false,
       },
       meals: [
@@ -69,6 +69,7 @@ const OrderTableSchema = new Schema(
           },
         },
       ],
+      totalPrice: {type: Number, required: true}
     },
 
 
