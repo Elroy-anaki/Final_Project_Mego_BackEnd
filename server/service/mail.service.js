@@ -79,3 +79,40 @@ export function sendInviteToTableEmail(guests) {
     });
   });
 }
+export function sendEmailForReviewMeals(orderId, guests) {
+  guests.forEach((guest) => {
+    transporter.sendMail({
+      from: "YourRestaurant@example.com",
+      to: guest.guestEmail,
+      subject: "We Value Your Feedback!",
+      html: `
+        <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+          <div style="background-color: #004080; padding: 20px; color: white; text-align: center; border-radius: 10px 10px 0 0;">
+            <h1 style="margin: 0;">Thank You for Dining with Us!</h1>
+          </div>
+          <div style="padding: 20px; background-color: #fff; border: 1px solid #ccc; border-top: none; border-radius: 0 0 10px 10px;">
+            <p style="font-size: 16px;">Hello Friend,</p>
+            <p style="font-size: 16px;">We hope you enjoyed your recent dining experience with us! Your feedback is incredibly important to help us improve and provide the best service possible.</p>
+            <p style="font-size: 16px;">Please take a moment to share your thoughts by clicking the button below:</p>
+            <div style="text-align: center; margin: 20px 0;">
+              <a href="http://localhost:8001/add-reviews-by-order-id/${orderId}/${guest.guestEmail}" style="
+                background-color: #ffa500;
+                color: white;
+                text-decoration: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                font-size: 16px;
+                font-weight: bold;
+              ">Leave a Review</a>
+            </div>
+            <p style="font-size: 14px; color: #666;">Thank you for helping us grow and improve. We look forward to serving you again soon!</p>
+          </div>
+          <div style="text-align: center; font-size: 12px; color: #aaa; margin-top: 20px;">
+            <p>© 2024 [Your Restaurant Name]. All rights reserved.</p>
+          </div>
+        </div>
+      `,
+    });
+  });
+}
+

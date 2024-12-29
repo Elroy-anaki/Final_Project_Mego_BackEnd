@@ -47,11 +47,11 @@ const OrderTableSchema = new Schema(
 
     status: {
       type: String,
-      enum: ["pending", "completed", "paid"],
+      enum: ["pending", "eating", "paid"],
       default: "pending",
     },
     table: {
-      SharedWith: {
+      sharedWith: {
         type: [Object],
         required: false,
       },
@@ -82,6 +82,6 @@ const OrderTableSchema = new Schema(
   { timestamps: true }
 );
 
-const Order = model("OrderTable", OrderTableSchema);
+const OrderTable = model("OrderTable", OrderTableSchema);
 
-export default Order;
+export default OrderTable;
