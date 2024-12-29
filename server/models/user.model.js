@@ -24,6 +24,10 @@ const userSchema = new Schema({
     verify: {
         type: Boolean,
         default: false
+    },
+    ordersQuantity: {
+        type: Number,
+        default: 0
     }
 },{timestamps:true});
 

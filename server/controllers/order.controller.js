@@ -1,5 +1,6 @@
 import OrderTable from "../models/orderTable.model.js";
 import Restaurant from "../models/restaurant.model.js";
+import User from "../models/user.model.js";
 import { buildOrderObj } from '../utils/order.utils.js'
 
 
@@ -83,9 +84,12 @@ export const addOrder = async (req, res) => {
 
 
 export const getAllOrdersTables = async (req, res) => {
+  const {status = 'all' } = req.query;
+  console.log(status)
+  const fiter =  status === 'all' ? {} : {status: status} 
 
   try {
-    const orders = await OrderTable.find()
+    const orders = await OrderTable.find(fiter)
       .populate({
         path: "user.userId",
         select: "userName userEmail",
@@ -182,8 +186,16 @@ export const changeStatus = async (req, res) => {
   console.log(req.body) 
 try {
   const order = await changeStatusByOrderType(req.params.orderId, req.body.type, req.body.newStatus)
-  req.body.newStatus === 'paid' && sendEmailForReviewMeals(req.params.orderId, order.table.sharedWith)
+  if(req.body.newStatus === 'paid'){ 
+    sendEmailForReviewMeals(req.params.orderId, order.table.sharedWith)
+    console.log("id", order.user.userId)
 
+    const user = await User.findById(order.user.userId);
+    
+    user.ordersQuantity = user.ordersQuantity + 1
+    user.save();
+    console.log("userrrrrrrrrrrrrrr:", user);
+  }
 
   res.status(200).json({success: true, msg: 'order uptaded successfully'})
 } catch (error) {
