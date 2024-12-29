@@ -1,5 +1,6 @@
 import Meal from "../models/meal.model.js";
 import cloudinary from '../config/cloudinary.config.js';
+import { model } from "mongoose";
 
 
 export const addMeal = async (req, res) => {
@@ -154,13 +155,20 @@ export const getAllReviewsByMealId = async (req, res) => {
   console.log("get reviews...")
   try {
     const { id } = req.params;
-    const meal = await Meal.findById(id).populate({ path: 'reviews' });
+    const meal = await Meal.findById(id)
+    .populate({
+      path: "reviews",
+      select: "comment rating user",
+      
+    })
+    
+    
     if (!meal) { throw new Error("The meal doesn't exist!") }
 
     res.status(200).json({
       success: true,
       msg: "Meal retrieved successfully.",
-      data: meal.reviews
+      data: meal
     });
   } catch (error) {
     res.status(500).json({

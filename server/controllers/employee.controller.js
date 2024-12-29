@@ -16,7 +16,7 @@ export const addEmployee = async (req, res) => {
     return res
       .status(201).json({
         success: true,
-        msg: "success add employee",
+        msg: "success add employee", 
         data: employee
       });
   } catch (error) {
