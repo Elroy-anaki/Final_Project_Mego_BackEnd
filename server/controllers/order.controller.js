@@ -83,7 +83,6 @@ export const addOrder = async (req, res) => {
 
 
 export const getAllOrdersTables = async (req, res) => {
-  console.log("orders");
 
   try {
     const orders = await OrderTable.find()
@@ -94,12 +93,12 @@ export const getAllOrdersTables = async (req, res) => {
       .populate({
         path: "table.meals",
         populate: {
-          path: "mealId",
+          path: "meal",
           select: "mealName mealPrice mealImage",
         },
       })
 
-    console.log(orders);
+    console.log("ssssssssssssssssssssssssssssssss", orders);
     res
       .status(200)
       .json({ success: true, msg: "success get all orders tables", data: orders });

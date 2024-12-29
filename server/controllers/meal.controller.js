@@ -61,6 +61,7 @@ export const getAllMeals = async (req, res) => {
 
 export const getMealsByCategory = async (req, res) => {
   const { categoryId } = req.params;
+  console.log("DDDDDDDDDDDDDDD", categoryId)
   try {
     const meals = await Meal.find({ mealCategories: categoryId })
     .populate({
@@ -75,10 +76,11 @@ export const getMealsByCategory = async (req, res) => {
       data: meals
     });
   } catch (error) {
+    console.log(error)
     res.status(500).json({
       success: false,
-      msg: "Failed to get meals.",
-      error: error.message || error,
+      msg: error.message || "Failed to get meals.",
+      error:  error
     });
   }
 };
