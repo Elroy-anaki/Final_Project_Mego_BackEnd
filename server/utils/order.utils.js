@@ -1,15 +1,16 @@
-import Table from '../models/table.model.js'
+import OrderTable from '../models/orderTable.model.js'
 
-export const buildOrderObj = async (order, tableId) => {
-    const table = await Table.findById(tableId)
-    const fullOrder = order;
-    fullOrder.user = { ...table.user };
-    table.user = undefined
-    fullOrder.table = {
-      SharedWith: table.SharedWith,
-      meals: table.meals,
-      totalPrice: table.totalPrice,
-    }; 
-    return fullOrder
+export const changeStatusByOrderType =  async(orderId, type, newStatus) => {
+  try {
+    if(type === 'orderTable') {
+      const order = await OrderTable.findByIdAndUpdate(orderId, {status:newStatus}, {new:true})
+      return order
+    } 
+
+      
+  } catch (error) {
+    throw error
   }
+
+}
   

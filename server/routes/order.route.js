@@ -11,7 +11,7 @@ import {
 
 const router = Router();
 
-router.post("/add-order", addOrder);
+router.post("/add-order/:tableId", addOrder);
 
 router.get("/get-all-orders-tables", getAllOrdersTables);
 

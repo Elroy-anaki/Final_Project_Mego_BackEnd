@@ -1,33 +1,19 @@
 import OrderTable from "../models/orderTable.model.js";
 import Restaurant from "../models/restaurant.model.js";
 import User from "../models/user.model.js";
-import { buildOrderObj } from '../utils/order.utils.js'
-
+import Table from "../models/table.model.js";
 
 import {sendEmailForReviewMeals} from '../service/mail.service.js'
+import {changeStatusByOrderType} from '../utils/order.utils.js'
 
 
-async function changeStatusByOrderType(orderId, type, newStatus) {
-  try {
-    if(type === 'orderTable') {
-      const order = await OrderTable.findByIdAndUpdate(orderId, {status:newStatus}, {new:true})
-      return order
-    } 
 
-      
-  } catch (error) {
-    throw error
-  }
-
-}
 
 export const addOrder = async (req, res) => {
   try {
-    console.log(req.body)
-    // const { order, cartId } = req.body;
 
-    // const fullOrder = await buildOrderObj(order, cartId);
     const newOrder = await OrderTable.create(req.body);
+    await Table.findByIdAndDelete(req.params.tableId)
 
     const restaurant = await Restaurant.findOne();
 
@@ -156,7 +142,6 @@ export const getOrderByOrderId = async (req, res) => {
 };
 
 export const editOrderById = async (req, res) => {
-  console.log("edit-------Order------By-------Id");
   console.log(req.params.id);
   console.log(req.body);
   try {
@@ -189,13 +174,9 @@ try {
   const order = await changeStatusByOrderType(req.params.orderId, req.body.type, req.body.newStatus)
   if(req.body.newStatus === 'paid'){ 
     sendEmailForReviewMeals(req.params.orderId, order.table.sharedWith)
-    console.log("id", order.user.userId)
-
     const user = await User.findById(order.user.userId);
-    
     user.ordersQuantity = user.ordersQuantity + 1
     user.save();
-    console.log("userrrrrrrrrrrrrrr:", user);
   }
 
   res.status(200).json({success: true, msg: 'order uptaded successfully'})
