@@ -23,10 +23,11 @@ async function changeStatusByOrderType(orderId, type, newStatus) {
 
 export const addOrder = async (req, res) => {
   try {
-    const { order, cartId } = req.body;
+    console.log(req.body)
+    // const { order, cartId } = req.body;
 
-    const fullOrder = await buildOrderObj(order, cartId);
-    const newOrder = await OrderTable.create(fullOrder);
+    // const fullOrder = await buildOrderObj(order, cartId);
+    const newOrder = await OrderTable.create(req.body);
 
     const restaurant = await Restaurant.findOne();
 
