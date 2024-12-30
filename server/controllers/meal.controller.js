@@ -41,7 +41,14 @@ export const getAllMeals = async (req, res) => {
 
   try {
     const countMeals = await Meal.countDocuments();
-    const meals = await Meal.find().sort({[search]: Number(sortBy)}).populate('mealCategories', "categoryName").skip((page - 1) * limit).limit(limit);
+    const meals = await Meal.find().sort({ [search]: Number(sortBy) })
+    .populate('mealCategories', "categoryName")
+    .populate({
+      path: 'reviews',
+      select: 'rating comment user.name'
+    })
+    .skip((page - 1) * limit)
+    .limit(limit);
     console.log(meals);
 
     res.status(200).json({
@@ -61,13 +68,14 @@ export const getAllMeals = async (req, res) => {
 
 export const getMealsByCategory = async (req, res) => {
   const { categoryId } = req.params;
+  console.log("DDDDDDDDDDDDDDD", categoryId)
   try {
     const meals = await Meal.find({ mealCategories: categoryId })
-    .populate({
-      path: 'reviews',
-      select: 'rating comment user.name' 
-    });
-   
+      .populate({
+        path: 'reviews',
+        select: 'rating comment user.name'
+      });
+
     console.log(meals)
     res.status(200).json({
       success: true,
@@ -75,10 +83,11 @@ export const getMealsByCategory = async (req, res) => {
       data: meals
     });
   } catch (error) {
+    console.log(error)
     res.status(500).json({
       success: false,
-      msg: "Failed to get meals.",
-      error: error.message || error,
+      msg: error.message || "Failed to get meals.",
+      error: error
     });
   }
 };

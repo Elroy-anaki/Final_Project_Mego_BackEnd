@@ -1,15 +1,19 @@
-import Order from "../models/order.model.js";
+import OrderTable from "../models/orderTable.model.js";
 import Restaurant from "../models/restaurant.model.js";
-import { buildOrderObj } from '../utils/order.utils.js'
+import User from "../models/user.model.js";
+import Table from "../models/table.model.js";
+
+import {sendEmailForReviewMeals} from '../service/mail.service.js'
+import {changeStatusByOrderType} from '../utils/order.utils.js'
+
 
 
 
 export const addOrder = async (req, res) => {
   try {
-    const { order, cartId } = req.body;
 
-    const fullOrder = await buildOrderObj(order, cartId);
-    const newOrder = await Order.create(fullOrder);
+    const newOrder = await OrderTable.create(req.body);
+    await Table.findByIdAndDelete(req.params.tableId)
 
     const restaurant = await Restaurant.findOne();
 
@@ -66,33 +70,34 @@ export const addOrder = async (req, res) => {
 };
 
 
-export const getAllOrders = async (req, res) => {
-  console.log("orders");
+export const getAllOrdersTables = async (req, res) => {
+  const {status = 'all' } = req.query;
+  console.log(status)
+  const fiter =  status === 'all' ? {} : {status: status} 
 
   try {
-    const orders = await Order.find()
+    const orders = await OrderTable.find(fiter)
       .populate({
-        path: "cart.userId",
+        path: "user.userId",
         select: "userName userEmail",
       })
       .populate({
-        path: "cart.meals",
+        path: "table.meals",
         populate: {
-          path: "mealId",
+          path: "meal",
           select: "mealName mealPrice mealImage",
         },
       })
-      .exec();
 
-    console.log(orders);
+    console.log("ssssssssssssssssssssssssssssssss", orders);
     res
       .status(200)
-      .json({ success: true, msg: "success get all orders", data: orders });
+      .json({ success: true, msg: "success get all orders tables", data: orders });
   } catch (error) {
     console.log(error);
-    res.status(404).json({
+    res.status(500).json({
       success: false,
-      msg: error.message || "not success get all orders",
+      msg: error.message || "not success get all orders tables",
       error,
     });
   }
@@ -102,9 +107,9 @@ export const getOrderByOrderId = async (req, res) => {
   console.log(req.params)
   const {orderId, guestEmail} = req.query;
   try {
-    const order = await Order.findOne({
+    const order = await OrderTable.findOne({
       _id: orderId,
-      "table.SharedWith":{$elemMatch:{ guestEmail: guestEmail, rated: false }} })
+      "table.sharedWith":{$elemMatch:{ guestEmail: guestEmail, rated: false }} })
       .populate({
         path: "user.userId",
         select: "userName userEmail",
@@ -137,11 +142,10 @@ export const getOrderByOrderId = async (req, res) => {
 };
 
 export const editOrderById = async (req, res) => {
-  console.log("edit-------Order------By-------Id");
   console.log(req.params.id);
   console.log(req.body);
   try {
-    const editedOrder = await Order.findByIdAndUpdate(
+    const editedOrder = await OrderTable.findByIdAndUpdate(
       req.params.id,
 
       { $set: req.body },
@@ -163,10 +167,30 @@ export const editOrderById = async (req, res) => {
   }
 };
 
+
+export const changeStatus = async (req, res) => {
+  console.log(req.body) 
+try {
+  const order = await changeStatusByOrderType(req.params.orderId, req.body.type, req.body.newStatus)
+  if(req.body.newStatus === 'paid'){ 
+    sendEmailForReviewMeals(req.params.orderId, order.table.sharedWith)
+    const user = await User.findById(order.user.userId);
+    user.ordersQuantity = user.ordersQuantity + 1
+    user.save();
+  }
+
+  res.status(200).json({success: true, msg: 'order uptaded successfully'})
+} catch (error) {
+  console.log(error)
+  res.status(500).json({success: false, msg: 'order not uptaded successfully'})
+  
+}
+}
+
 export const deleteOrderById = async (req, res) => {
   console.log(req.params.id);
   try {
-    const orderToDelete = await Order.findByIdAndDelete(req.params.id);
+    const orderToDelete = await OrderTable.findByIdAndDelete(req.params.id);
     res.status(200).json({
       success: true,
       msg: "Order deleted successfully!",

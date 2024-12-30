@@ -1,6 +1,6 @@
 import Review from "../models/review.model.js";
 import Meal from "../models/meal.model.js";
-import Order from "../models/order.model.js";
+import OrderTable from "../models/orderTable.model.js";
 
 export const addReviews = async (req, res) => {
   const reviews = req.body
@@ -8,15 +8,15 @@ export const addReviews = async (req, res) => {
   const {orderId, guestEmail} = req.params
 
   try {
-    await Order.updateOne(
+    await OrderTable.updateOne(
       {
         _id: orderId,
-        "table.SharedWith": {
+        "table.sharedWith": {
           $elemMatch: { guestEmail: guestEmail, rated: false }, 
         },
       },
       {
-        $set: { "table.SharedWith.$.rated": true }, 
+        $set: { "table.sharedWith.$.rated": true }, 
       }
     );
     const newReviews = await Review.create(reviews);

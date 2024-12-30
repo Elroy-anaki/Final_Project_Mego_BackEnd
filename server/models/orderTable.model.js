@@ -1,6 +1,6 @@
 import mongoose, { Schema, model } from "mongoose";
 
-const OrderTableSchema = new Schema(
+const orderTableSchema = new Schema(
   {
     dateTime: {
       date: {
@@ -19,16 +19,16 @@ const OrderTableSchema = new Schema(
     payment: {
       cardNumber: {
         type: String,
-        required: true,
+        required: false,
         match: /^\d{16}$/,
       },
       cardHolderName: {
         type: String,
-        required: true,
+        required: false,
       },
       expirationDate: {
         type: String,
-        required: true,
+        required: false,
         match: /^(0[1-9]|1[0-2])\/([0-9]{2})$/,
       },
     },
@@ -47,11 +47,11 @@ const OrderTableSchema = new Schema(
 
     status: {
       type: String,
-      enum: ["pending", "completed", "paid"],
+      enum: ["pending", "eating", "paid"],
       default: "pending",
     },
     table: {
-      SharedWith: {
+      sharedWith: {
         type: [Object],
         required: false,
       },
@@ -69,7 +69,7 @@ const OrderTableSchema = new Schema(
           },
         },
       ],
-      totalPrice: {type: Number, required: true}
+      totalPrice: {type: Number, required: true, default: 0}
     },
 
 
@@ -82,6 +82,23 @@ const OrderTableSchema = new Schema(
   { timestamps: true }
 );
 
-const Order = model("OrderTable", OrderTableSchema);
 
-export default Order;
+orderTableSchema.pre('save', async function (next) {
+  console.log("_________________________________________________________")
+  await this.populate('table.meals.meal');
+  console.log("Populated meals:", this.table.meals);
+  
+  const totalPrice = this.table.meals.reduce((acc, mealItem) => {
+    const mealPrice = mealItem.meal.mealPrice || 0; 
+    return acc + mealPrice * mealItem.quantity;
+  }, 0);
+
+  this.table.totalPrice = totalPrice;
+
+  console.log("Calculated Total Price:", totalPrice);
+  next();
+});
+
+const OrderTable = model("OrderTable", orderTableSchema);
+
+export default OrderTable;
