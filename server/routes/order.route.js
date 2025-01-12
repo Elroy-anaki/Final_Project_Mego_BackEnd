@@ -3,6 +3,8 @@ import {
   addOrder,
   getAllOrdersTables,
   getOrderByOrderId,
+  createOrderPayPal,
+  capturePaymentPaypal,
   editOrderById,
   changeStatus,
   deleteOrderById
@@ -12,6 +14,11 @@ import {
 const router = Router();
 
 router.post("/add-order/:tableId", addOrder);
+
+// Payment 
+router.post("/payment/create-order", createOrderPayPal);
+
+router.post("/payment/complete-order", capturePaymentPaypal)
 
 router.get("/get-all-orders-tables", getAllOrdersTables);
 

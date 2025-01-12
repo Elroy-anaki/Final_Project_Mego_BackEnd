@@ -44,6 +44,8 @@ export const signUpWithGoogle = async (req, res) => {
 export const signUp = async (req, res) => {
   try {
     console.log(req.body);
+    // const exist = await User.findOne({ userEmail: userEmail })
+    // if(exist) throw new Error("User already exist!")
     const user = await User.create(req.body);
     sendEmailVerification(user);
 
@@ -70,6 +72,7 @@ export const signIn = async (req, res) => {
     const user = await User.findOne({ userEmail });
 
     if (!user) throw new Error("User Not Exist!");
+    if(!user.verify ) throw new Error("Verfiy your account please!");
 
     const isMatch = await compare(userPassword, user.userPassword);
 
