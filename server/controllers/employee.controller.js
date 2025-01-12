@@ -4,7 +4,6 @@ import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 
 
-
 export const addEmployee = async (req, res) => {
   try {
     console.log(req.body);
@@ -177,12 +176,11 @@ export const autoComplete = async (req, res) => {
 };
 
 export const editEmployeeById = async (req, res) => {
-  console.log("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG")
   console.log(req.params.id)
   delete req.body.employeePassword
   console.log(req.body)
   try {
-    const editEmployee = await Employee.findByIdAndUpdate(req.params.id, req.body, {new:true});
+    const editEmployee = await Employee.findByIdAndUpdate(req.params.id, {premission:req.body.premission}, {new:true});
     res.status(200).json({
       success: true,
       msg: "Employee Edited!",
