@@ -51,3 +51,27 @@ export const addReviews = async (req, res) => {
     });
   }
 };
+export const getReviewById = async (req, res) => {
+  console.log("req.params", req.params.id);
+
+  try {
+    const review = await Review.findById(req.params.id);
+    console.log(review);
+
+
+   
+ 
+
+    res.status(200).json({
+      success: true,
+      msg: ".",
+      meal: review,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      msg: "The review was not added successfully.",
+      error: error.message || error,
+    });
+  }
+};

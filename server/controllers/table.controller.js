@@ -85,6 +85,8 @@ export const editTableById = async (req, res) => {
     // return
 
     const updatedTable = await Table.findById(id);
+    console.log("updatedTable", updatedTable);
+    
     if (!updatedTable) throw "Table not found!"
     updatedTable.meals = req.body
     await updatedTable.save();
