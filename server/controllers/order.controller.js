@@ -3,13 +3,15 @@ import Restaurant from "../models/restaurant.model.js";
 import User from "../models/user.model.js";
 import Table from "../models/table.model.js";
 
-import {sendEmailForReviewMeals} from '../service/mail.service.js'
-import {changeStatusByOrderType} from '../utils/order.utils.js'
+import { sendEmailForReviewMeals } from '../service/mail.service.js'
+import { changeStatusByOrderType } from '../utils/order.utils.js'
+import { createOrder, capturePayment, setObjectByPayPalSchema } from '../service/payment.service.js'
 
 
 
 
 export const addOrder = async (req, res) => {
+  console.log("req.body", req.body)
   try {
 
     const newOrder = await OrderTable.create(req.body);
@@ -69,13 +71,40 @@ export const addOrder = async (req, res) => {
   }
 };
 
+export const createOrderPayPal = async (req, res) => {
+  const table = req.body.table
+  console.log(table)
+  setObjectByPayPalSchema(table.meals)
+  try {
+    // return total_price
+    const orderId = await createOrder(table.meals, table.totalPrice);
+    res.json({ orderId })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ message: false })
+  }
+}
+
+export const capturePaymentPaypal = async (req, res) => {
+  try {
+    const { orderId } = req.body;
+
+    const captureData = await capturePayment(orderId);
+    res.json(captureData)
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ message: false })
+
+  }
+}
 
 export const getAllOrdersTables = async (req, res) => {
-  const {status = 'all' } = req.query;
+  const { status = 'all', page, sortBy = '1', limit } = req.query;
   console.log(status)
-  const fiter =  status === 'all' ? {} : {status: status} 
+  const fiter = status === 'all' ? {} : { status: status }
 
   try {
+    const countOrdersTable = OrderTable.countDocuments();
     const orders = await OrderTable.find(fiter)
       .populate({
         path: "user.userId",
@@ -105,11 +134,12 @@ export const getAllOrdersTables = async (req, res) => {
 
 export const getOrderByOrderId = async (req, res) => {
   console.log(req.params)
-  const {orderId, guestEmail} = req.query;
+  const { orderId, guestEmail } = req.query;
   try {
     const order = await OrderTable.findOne({
       _id: orderId,
-      "table.sharedWith":{$elemMatch:{ guestEmail: guestEmail, rated: false }} })
+      "table.sharedWith": { $elemMatch: { guestEmail: guestEmail, rated: false } }
+    })
       .populate({
         path: "user.userId",
         select: "userName userEmail",
@@ -122,8 +152,8 @@ export const getOrderByOrderId = async (req, res) => {
         },
       })
     console.log(order)
-    if(order === null) throw new Error("You've already rated!")
-    
+    if (order === null) throw new Error("You've already rated!")
+
     res
       .status(200)
       .json({
@@ -169,22 +199,22 @@ export const editOrderById = async (req, res) => {
 
 
 export const changeStatus = async (req, res) => {
-  console.log(req.body) 
-try {
-  const order = await changeStatusByOrderType(req.params.orderId, req.body.type, req.body.newStatus)
-  if(req.body.newStatus === 'paid'){ 
-    sendEmailForReviewMeals(req.params.orderId, order.table.sharedWith)
-    const user = await User.findById(order.user.userId);
-    user.ordersQuantity = user.ordersQuantity + 1
-    user.save();
-  }
+  console.log(req.body)
+  try {
+    const order = await changeStatusByOrderType(req.params.orderId, req.body.type, req.body.newStatus)
+    if (req.body.newStatus === 'paid') {
+      sendEmailForReviewMeals(req.params.orderId, order.table.sharedWith)
+      const user = await User.findById(order.user.userId);
+      user.ordersQuantity = user.ordersQuantity + 1
+      user.save();
+    }
 
-  res.status(200).json({success: true, msg: 'order uptaded successfully'})
-} catch (error) {
-  console.log(error)
-  res.status(500).json({success: false, msg: 'order not uptaded successfully'})
-  
-}
+    res.status(200).json({ success: true, msg: 'order uptaded successfully' })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ success: false, msg: 'order not uptaded successfully' })
+
+  }
 }
 
 export const deleteOrderById = async (req, res) => {

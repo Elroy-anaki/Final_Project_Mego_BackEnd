@@ -18,7 +18,23 @@ async function generateAccessToken() {
   }
 }
 
-export const createOrder = async () => {
+
+export const setObjectByPayPalSchema = (meals) => {
+  const mealsBySchema = meals.map((meal) => {
+    return {
+      name:meal.meal.mealName,
+      quantity: String(meal.quantity),
+      unit_amount: {
+        currency_code: "ILS",
+        value: String(meal.meal.mealPrice * meal.quantity)
+      }
+    }
+  })
+  console.log(mealsBySchema)
+
+}
+export const createOrder = async (meals, totalPrice) => {
+
     try {
       const access_token = await generateAccessToken();
   
@@ -32,26 +48,43 @@ export const createOrder = async () => {
         data: JSON.stringify({
           intent: "CAPTURE",
           purchase_units: [
-            {
+            { items: setObjectByPayPalSchema(meals),
               amount: {
                 currency_code: "ILS",
-                value: "49.00",
+                value: String(Number(totalPrice).toFixed(2)),
               },
+              
             },
           ],
           application_context: {
             shipping_preference: "NO_SHIPPING",
             user_action: "PAY_NOW",
             brand_name: "nethanel love paypal",
-            // return_url:"שולח אותכם לכתובת שבחרתם"
-            // cancel_url:"במידה וביטלתם שולח אותכם לכתובת שבחרתם"
           },
         }),
       });
-      // save data for user still dont payed;
       return data.id;
     } catch (error) {
       console.log(error);
     }
   };
-generateAccessToken()
+
+  export const capturePayment = async (orderId) => {
+    try {
+      const access_token = await generateAccessToken();
+  
+      const { data } = await axios({
+        url: `https://api-m.sandbox.paypal.com/v2/checkout/orders/${orderId}/capture`,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization:
+            `Bearer ${access_token}`,
+        },
+      });
+  
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  }

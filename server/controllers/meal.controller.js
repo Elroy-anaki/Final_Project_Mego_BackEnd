@@ -139,7 +139,8 @@ export const autoComplete = async (req, res) => {
       reviews: 1,
       ingredients: 1,
       amoutnOfCalories: 1,
-      mealCategories: 1
+      mealCategories: 1,
+      rating:1
     }
   });
   pipeline.push({
@@ -148,15 +149,21 @@ export const autoComplete = async (req, res) => {
 
   try {
     const meals = await Meal.aggregate(pipeline).sort({ score: - 1 })
+    const populatedMeals = await Meal
+    .populate(meals, {
+      path: 'reviews',
+      select: 'rating comment user.name'
+    })
+
     res.status(200).json({
       success: true,
       msg: "Take Suggestions",
-      data: meals
+      data: populatedMeals
     })
   } catch (error) {
     console.log(error)
     res.status(500).json({
-      success: true,
+      success: false,
       msg: "Error",
       error: error
     })
