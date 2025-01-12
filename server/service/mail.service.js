@@ -1,4 +1,5 @@
 import transporter from "../config/nodemailer.config.js";
+import OrderTable from "../models/orderTable.model.js";
 
 export function sendEmailVerification (user) {
   console.log("WWWORKKK")
@@ -12,7 +13,6 @@ export function sendEmailVerification (user) {
         Verify Email
         </a>`,
       })
-      console.log("WWWORKKK")
     
 }
 
@@ -82,6 +82,7 @@ export function sendInviteToTableEmail(guests) {
     });
   });
 }
+
 export function sendEmailForReviewMeals(orderId, guests) {
   guests.forEach((guest) => {
     transporter.sendMail({
@@ -119,3 +120,61 @@ export function sendEmailForReviewMeals(orderId, guests) {
   });
 }
 
+export async function sendOrderDetailsToCustomer(newOrder) {
+  const populatedOrder = await OrderTable.findById(newOrder._id).populate({
+    path: 'table.meals.meal',
+    select: 'mealName mealImage'
+  });
+
+
+  const emailTemplate = `
+    <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+      <div style="background-color: #004080; padding: 20px; color: white; text-align: center; border-radius: 10px 10px 0 0;">
+        <h1 style="margin: 0;">Your Order Confirmation</h1>
+        <p style="margin: 10px 0;">Reservation for ${populatedOrder.dateTime.date} at ${populatedOrder.dateTime.time}</p>
+        <p style="margin: 5px 0;">Number of Guests: ${populatedOrder.numberOfGuests}</p>
+        <p style="margin: 5px 0;">Total Price ${populatedOrder.table.totalPrice}</p>
+
+      </div>
+
+      <div style="padding: 20px; background-color: #fff; border: 1px solid #ccc; border-top: none; border-radius: 0 0 10px 10px;">
+        <h2 style="color: #004080; margin-bottom: 20px;">Order Details:</h2>
+        
+        ${populatedOrder.table.meals.map(item => `
+          <div style="display: flex; align-items: center; margin-bottom: 15px; padding: 15px; background-color: #f8f9fa; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <img 
+              src="${item.meal.mealImage}" 
+              alt="${item.meal.mealName}" 
+              style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px; margin-right: 15px;"
+            >
+            <div>
+              <h3 style="margin: 0 0 5px 0; color: #004080; font-size: 18px;">${item.meal.mealName}</h3>
+              <p style="margin: 0; color: #666;">Quantity: ${item.quantity}</p>
+            </div>
+          </div>
+        `).join('')}
+
+        <div style="text-align: center; margin-top: 20px;">
+          <p style="font-size: 16px; color: #666;">Thank you for choosing our restaurant!</p>
+          <p style="font-size: 14px; color: #888;">
+            If you have any questions, please contact us at 
+            <a href="mailto:support@restaurant.com" style="color: #004080; text-decoration: none;">support@restaurant.com</a>
+          </p>
+        </div>
+      </div>
+
+      <div style="text-align: center; font-size: 12px; color: #aaa; margin-top: 20px;">
+        <p>© ${new Date().getFullYear()} Your Restaurant Name. All rights reserved.</p>
+      </div>
+    </div>
+  `;
+
+  populatedOrder.table.sharedWith.forEach((guest) => {
+    transporter.sendMail({
+      from: "",
+      to: guest.guestEmail,
+      subject: "Your Table Order Confirmation",
+      html: emailTemplate,
+    });
+  });
+}

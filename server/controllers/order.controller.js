@@ -3,7 +3,7 @@ import Restaurant from "../models/restaurant.model.js";
 import User from "../models/user.model.js";
 import Table from "../models/table.model.js";
 
-import { sendEmailForReviewMeals } from '../service/mail.service.js'
+import { sendEmailForReviewMeals, sendOrderDetailsToCustomer } from '../service/mail.service.js'
 import { changeStatusByOrderType } from '../utils/order.utils.js'
 import { createOrder, capturePayment, setObjectByPayPalSchema } from '../service/payment.service.js'
 
@@ -13,8 +13,10 @@ import { createOrder, capturePayment, setObjectByPayPalSchema } from '../service
 export const addOrder = async (req, res) => {
   console.log("req.body", req.body)
   try {
-
+    
     const newOrder = await OrderTable.create(req.body);
+    await sendOrderDetailsToCustomer(newOrder)
+    console.log("Mail____________________________________")
     await Table.findByIdAndDelete(req.params.tableId)
 
     const restaurant = await Restaurant.findOne();

@@ -31,7 +31,7 @@ export const signUpWithGoogle = async (req, res) => {
 
     res
       .status(201)
-      .json({ success: true, msg: "success add user", data: user });
+      .json({ success: true, msg: "success add user", data: req.body });
   } catch (error) {
     console.log(error.code);
     res.status(500).json({
