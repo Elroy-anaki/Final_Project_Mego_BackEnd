@@ -47,8 +47,8 @@ const orderTableSchema = new Schema(
 
     status: {
       type: String,
-      enum: ["pending", "eating", "paid"],
-      default: "pending",
+      enum: ["paid", "eating", "completed"],
+      default: "paid",
     },
     table: {
       sharedWith: {

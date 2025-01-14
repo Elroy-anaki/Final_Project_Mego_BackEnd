@@ -101,12 +101,13 @@ export const capturePaymentPaypal = async (req, res) => {
 }
 
 export const getAllOrdersTables = async (req, res) => {
-  const { status = 'all', page, sortBy = '1', limit } = req.query;
+  console.log(req.query)
+  const { status = 'paid', page, sortBy = '1', limit } = req.query;
   console.log(status)
   const fiter = status === 'all' ? {} : { status: status }
 
   try {
-    const countOrdersTable = OrderTable.countDocuments();
+    // const countOrdersTable = OrderTable.countDocuments();
     const orders = await OrderTable.find(fiter)
       .populate({
         path: "user.userId",
@@ -204,7 +205,7 @@ export const changeStatus = async (req, res) => {
   console.log(req.body)
   try {
     const order = await changeStatusByOrderType(req.params.orderId, req.body.type, req.body.newStatus)
-    if (req.body.newStatus === 'paid') {
+    if (req.body.newStatus === 'completed') {
       sendEmailForReviewMeals(req.params.orderId, order.table.sharedWith)
       const user = await User.findById(order.user.userId);
       user.ordersQuantity = user.ordersQuantity + 1
