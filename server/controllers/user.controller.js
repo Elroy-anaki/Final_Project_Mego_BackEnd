@@ -2,6 +2,7 @@ import User from "../models/user.model.js";
 import { compare, hash } from "bcrypt";
 import { jwtCookieOptions, generateToken } from "../service/auth.service.js";
 import { sendEmailVerification } from "../service/mail.service.js";
+import OrderTable from "../models/orderTable.model.js";
 
 
 export const getAllUsers = async (req, res) => {
@@ -41,6 +42,7 @@ export const signUpWithGoogle = async (req, res) => {
     });
   }
 };
+
 export const signUp = async (req, res) => {
   try {
     console.log(req.body);
@@ -127,3 +129,27 @@ export const editUserDetails = async (req, res) => {
     });
   }
 };
+
+export const getAllOrdersByUserId = async(req, res) => {
+  const {userId} = req.params
+  console.log("YHESSSSSSSSSSSSSSSS")
+  try {
+    const ordersByUsers = await OrderTable.find({"user.userId": userId}).populate({
+      path: 'table.meals.meal',
+      select: 'mealName mealImage'
+    });
+    console.log(ordersByUsers)
+    res.status(200).json({
+      success: true,
+      msg: "Orders by user Id",
+      data: ordersByUsers
+    })
+
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      success: false,
+      msg: error.message || "failed to fetch data"
+    })
+  }
+}
