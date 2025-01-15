@@ -27,13 +27,11 @@ export const getAllUsers = async (req, res) => {
 export const signUpWithGoogle = async (req, res) => {
   try {
     console.log(req.body);
-    
     const user = await User.create(req.body);
-    
 
     res
       .status(201)
-      .json({ success: true, msg: "success add user", data: req.body });
+      .json({ success: true, msg: "success add user", data: user });
   } catch (error) {
     console.log(error.code);
     res.status(500).json({
@@ -47,8 +45,6 @@ export const signUpWithGoogle = async (req, res) => {
 export const signUp = async (req, res) => {
   try {
     console.log(req.body);
-    // const exist = await User.findOne({ userEmail: userEmail })
-    // if(exist) throw new Error("User already exist!")
     const user = await User.create(req.body);
     sendEmailVerification(user);
 
@@ -133,7 +129,6 @@ export const editUserDetails = async (req, res) => {
 
 export const getAllOrdersByUserId = async(req, res) => {
   const {userId} = req.params
-  console.log("YHESSSSSSSSSSSSSSSS")
   try {
     const ordersByUsers = await OrderTable.find({"user.userId": userId}).populate({
       path: 'table.meals.meal',

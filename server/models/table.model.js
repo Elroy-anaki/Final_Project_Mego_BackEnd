@@ -37,9 +37,9 @@ const tableSchema = new Schema({
 tableSchema.pre('save', async function (next) {
     await this.populate('meals.meal');
     
-    const totalPrice = this.meals.reduce((acc, mealItem) => {
+    const totalPrice = this.meals.reduce((total, mealItem) => {
       const mealPrice = mealItem.meal.mealPrice || 0; 
-      return acc + mealPrice * mealItem.quantity;
+      return total + mealPrice * mealItem.quantity;
     }, 0);
   
     this.totalPrice = totalPrice;

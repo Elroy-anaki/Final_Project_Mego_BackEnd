@@ -13,21 +13,21 @@ import upload from "../config/multer.config.js";
 
 const router = Router();
 
-router.post("/add-meal", upload.single("mealImage"), addMeal);
+router.post('/add-meal', upload.single('mealImage'), addMeal);
 
-router.get("/get-all-meals", getAllMeals);
+router.get('/get-all-meals', getAllMeals);
 
 router.get('/get-meals-by-category/:categoryId', getMealsByCategory);
 
-router.get("/get-meal-by-id/:id", getMealById);
+router.get('/get-meal-by-id/:id', getMealById);
 
-router.get("/get-all-reviews-by-id/:id", getAllReviewsByMealId);
+router.get('/get-all-reviews-by-id/:id', getAllReviewsByMealId);
 
-router.get("/auto-complete", autoComplete)
+router.get('/auto-complete', autoComplete)
 
-router.put("/edit-meal-by-id/:id", upload.single("mealImage"), editMealById)
+router.put('/edit-meal-by-id/:id', upload.single('mealImage'), editMealById)
 
-router.delete("/delete-meal-by-id/:id", deleteMealById)
+router.delete('/delete-meal-by-id/:id', deleteMealById)
 
 
 export default router;

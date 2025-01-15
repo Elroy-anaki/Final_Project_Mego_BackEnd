@@ -1,7 +1,7 @@
 import Employee from "../models/emlpoyee.model.js";
 import { compare } from "bcrypt";
-import mongoose from "mongoose";
-import jwt from "jsonwebtoken";
+import { jwtCookieOptions, generateToken } from "../service/auth.service.js";
+
 
 
 export const addEmployee = async (req, res) => {
@@ -32,7 +32,7 @@ export const signIn = async (req, res) => {
   console.log(req.body)
   try {
     const { employeePassword, employeeEmail } = req.body;
-    
+
     if (!employeePassword || !employeeEmail)
       throw new Error("all fields required!");
 
@@ -48,18 +48,13 @@ export const signIn = async (req, res) => {
 
     if (!isMatch) throw new Error("Password not Valid!");
 
-    const data = { ...employeeFromData._doc, employeePassword: "*********" };
 
     // Send User Token For Experience with ReAuthenticate 
-    const token = jwt.sign({ data }, "Xn5&v9@z#G%hJq!Rk1tW*Z^a4Lb$NcP+Ym2o8Us0pTc7EdF", {
-      expiresIn: 60 * 60 * 1
-    });
+    const data = generateToken(employeeFromData);
+    const token = data.token;
+    const payload = data.payload;
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: true,
-      maxAge: 1000 * 60 * 60 * 1
-    });
+    res.cookie("token", token, jwtCookieOptions);
 
     res.status(200).json({
       success: true,
@@ -81,8 +76,8 @@ export const getAllEmployees = async (req, res) => {
   console.log("employees")
   console.log(req.query)
 
-  const { limit , page, search = 'all' } = req.query;
-  const filterBy = search === 'all' ? {} : {premission: search}
+  const { limit, page, search = 'all' } = req.query;
+  const filterBy = search === 'all' ? {} : { premission: search }
 
   try {
     const countEmployees = await Employee.countDocuments();
@@ -90,11 +85,11 @@ export const getAllEmployees = async (req, res) => {
     const employees = await Employee.find(filterBy).skip((page - 1) * limit).limit(limit);
     console.log("employees", employees)
     res.status(200).json({
-       success: true, 
-       msg: "success get all employees", 
-       data: employees ,
-       count: countEmployees
-      });
+      success: true,
+      msg: "success get all employees",
+      data: employees,
+      count: countEmployees
+    });
   }
   catch (error) {
     console.log(error);
@@ -134,7 +129,7 @@ export const autoComplete = async (req, res) => {
 
   pipeline.push({
     $search: {
-      index: 'autoCompleteEmployees',
+      index: String(process.env.MONGO_SEARCH_INDEX_EMPLOYEE),
       autocomplete: {
         query: query,
         path: 'employeeName',
@@ -181,15 +176,15 @@ export const editEmployeeById = async (req, res) => {
   delete req.body.employeePassword
   console.log(req.body)
   try {
-    const editEmployee = await Employee.findByIdAndUpdate(req.params.id, {premission:req.body.premission}, {new:true});
+    const editEmployee = await Employee.findByIdAndUpdate(req.params.id, { premission: req.body.premission }, { new: true });
     res.status(200).json({
       success: true,
       msg: "Employee Edited!",
       data: editEmployee
     })
     console.log(editEmployee);
-    
-    
+
+
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -197,10 +192,10 @@ export const editEmployeeById = async (req, res) => {
       msg: "Employee NOT Edited!",
       error: error.message || error
     })
-    
-    
+
+
   }
-  
+
   return
 };
 
@@ -220,7 +215,7 @@ export const deleteEmployeeById = async (req, res) => {
       msg: "Employee NOT deleted successfully!",
       error: error
     })
-    
+
   }
 };
 

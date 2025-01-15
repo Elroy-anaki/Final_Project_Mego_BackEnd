@@ -2,9 +2,8 @@ import transporter from "../config/nodemailer.config.js";
 import OrderTable from "../models/orderTable.model.js";
 
 export function sendEmailVerification (user) {
-  console.log("WWWORKKK")
   transporter.sendMail({
-    from:"",
+    from: String(process.env.EMAIL_SENDER) || "",
     to: user.userEmail,
         subject: "Verfiy Your Email",
         html: `<h1>Hello ${user.userName}</h1>
@@ -14,11 +13,11 @@ export function sendEmailVerification (user) {
         </a>`,
       })
     
-}
+};
 
 export function sendEmailForGotPassword (user,premission) {
    transporter.sendMail({
-    from: process.env.EMAIL_FROM || "your-email@example.com",
+    from: String(process.env.EMAIL_SENDER) || "",
     to: premission === "user" ? user.userEmail : user.employeeEmail,
     subject: "Reset Password",
     html: `
@@ -45,12 +44,12 @@ export function sendEmailForGotPassword (user,premission) {
       </div>
     `,
   });
-}
+};
 
 export function sendInviteToTableEmail(guests) {
   guests.forEach((guest) => {
     transporter.sendMail({
-      from: "",
+      from: String(process.env.EMAIL_SENDER) || "",
       to: guest.guestEmail,
       subject: "Table Invitation",
       html: `
@@ -81,12 +80,12 @@ export function sendInviteToTableEmail(guests) {
       `,
     });
   });
-}
+};
 
 export function sendEmailForReviewMeals(orderId, guests) {
   guests.forEach((guest) => {
     transporter.sendMail({
-      from: "YourRestaurant@example.com",
+      from: String(process.env.EMAIL_SENDER) || "",
       to: guest.guestEmail,
       subject: "We Value Your Feedback!",
       html: `
@@ -118,7 +117,7 @@ export function sendEmailForReviewMeals(orderId, guests) {
       `,
     });
   });
-}
+};
 
 export async function sendOrderDetailsToCustomer(newOrder) {
   const populatedOrder = await OrderTable.findById(newOrder._id).populate({
@@ -171,10 +170,10 @@ export async function sendOrderDetailsToCustomer(newOrder) {
 
   populatedOrder.table.sharedWith.forEach((guest) => {
     transporter.sendMail({
-      from: "",
+      from: String(process.env.EMAIL_SENDER) || "",
       to: guest.guestEmail,
       subject: "Your Table Order Confirmation",
       html: emailTemplate,
     });
   });
-}
+};

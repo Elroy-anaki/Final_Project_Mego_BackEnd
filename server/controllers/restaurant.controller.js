@@ -8,12 +8,6 @@ export const addRestaurant = async (req, res) => {
     console.log(req.files.restaurantImage)
     console.log(req.files.restaurantLogo)
     try {
-        // if (!req.files || !req.files.restaurantImage || !req.files.restaurantLogo) {
-        //     res.status(400).json({
-        //         success: false,
-        //         msg: 'Both restaurant image and logo are required!'
-        //     });
-        // }
 
         const [restaurantImageDetails, restaurantLogoDetails] = await Promise.all([
             cloudinary.uploader.upload(req.files.restaurantImage[0].path),
@@ -43,7 +37,7 @@ export const addRestaurant = async (req, res) => {
 
 export const getRestaurant = async (req, res) => {
     try {
-        const restaurant = await Restaurant.findOne({restaurantName: "Plate Ahead"})
+        const restaurant = await Restaurant.findOne({restaurantName: String(process.env.RESTAURANT_NAME)})
         res.status(200).json({
             success: true,
             msg: 'Restaurant is here!',

@@ -1,5 +1,4 @@
 
-
 export function createAvailabilityPipeline(date, time) {
     return [
         {

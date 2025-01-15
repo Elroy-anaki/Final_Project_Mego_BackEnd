@@ -7,12 +7,7 @@ export const addCategory = async (req, res) => {
   console.log(req.file);
   try {
     const { categoryName } = req.body;
-    if (!categoryName) {
-      return res.status(500).json({
-        success: false,
-        msg: "All fields are required!",
-      });
-    }
+    if (!categoryName) throw new Error("Category Name is required!")
 
     if (req.file) {
       const uploadResult = await cloudinary.uploader.upload(req.file.path);
@@ -31,7 +26,7 @@ export const addCategory = async (req, res) => {
     if (error.code === 11000) {
       res.status(400).json({
         success: false,
-        msg: "Meal category with this name already exists.",
+        msg: "Category with this name already exists.",
       });
     }
 

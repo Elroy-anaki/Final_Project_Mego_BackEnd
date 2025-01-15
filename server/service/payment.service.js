@@ -7,8 +7,8 @@ async function generateAccessToken() {
       method: "POST",
       data: "grant_type=client_credentials",
       auth: {
-        username: "AQo7NVIVKw_tJ_SYLk3Dk7hjiejm6uaAy91uyPHfP7VyjLB8OalqpFfoWCjWy0ZoQFRGS8rRq8BsB9Os",
-        password: "EMdWwcG9jiBZ8ZI-wlxUkkDJoNPeU6Q1d5yLyVvzX2oSNVmKmeS3bUcCpMoaZnWkMWtZiqpao7Tp_JM-",
+        username: String(process.env.PAYPAL_USER_NAME),
+        password: String(process.env.PAYPAL_PASSWORD),
       },
     });
     console.log(data)
@@ -16,8 +16,7 @@ async function generateAccessToken() {
   } catch (error) {
     console.log(error);
   }
-}
-
+};
 
 export const setObjectByPayPalSchema = (meals) => {
   const mealsBySchema = meals.map((meal) => {
@@ -32,7 +31,8 @@ export const setObjectByPayPalSchema = (meals) => {
   })
   console.log(mealsBySchema)
 
-}
+};
+
 export const createOrder = async (meals, totalPrice) => {
 
     try {
@@ -67,9 +67,9 @@ export const createOrder = async (meals, totalPrice) => {
     } catch (error) {
       console.log(error);
     }
-  };
+};
 
-  export const capturePayment = async (orderId) => {
+export const capturePayment = async (orderId) => {
     try {
       const access_token = await generateAccessToken();
   
@@ -87,4 +87,4 @@ export const createOrder = async (meals, totalPrice) => {
     } catch (error) {
       console.log(error);
     }
-  }
+};

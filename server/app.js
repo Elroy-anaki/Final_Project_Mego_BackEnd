@@ -32,8 +32,6 @@ import reviewsRoutes from './routes/review.route.js'
 import categoriesRoutes from './routes/category.route.js'
 import ordersRoutes from './routes/order.route.js'
 import tablesRoutes from './routes/table.route.js'
-// import cortsRoutes from './routes/cart.route.js'
-
 
 
 app.use('/auth', authRoutes)
@@ -46,9 +44,5 @@ app.use('/categories', categoriesRoutes)
 app.use('/orders', ordersRoutes)
 app.use('/tables', tablesRoutes)
 
-// app.use('/carts', cortsRoutes)
 
-
-
-
-app.listen(port, () => console.log(`Server running on port ${port}...`));
+app.listen(port, () => {console.log(`Server running on port ${port}...`)});

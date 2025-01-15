@@ -13,20 +13,20 @@ import {
 
 const router = Router();
 
-router.post("/add-order/:tableId", addOrder);
+router.post('/add-order/:tableId', addOrder);
 
-// Payment 
-router.post("/payment/create-order", createOrderPayPal);
+// Payment Routes
+router.post('/payment/create-order', createOrderPayPal);
 
-router.post("/payment/complete-order", capturePaymentPaypal)
+router.post('/payment/complete-order', capturePaymentPaypal)
 
-router.get("/get-all-orders-tables", getAllOrdersTables);
+router.get('/get-all-orders-tables', getAllOrdersTables);
 
-router.get("/get-order-by-order-id", getOrderByOrderId);
+router.get('/get-order-by-order-id', getOrderByOrderId);
 
-router.put("/edit-order-by-id/:id", editOrderById)
+router.put('/edit-order-by-id/:id', editOrderById)
 
-router.put("/change-status/:orderId", changeStatus)
+router.put('/change-status/:orderId', changeStatus)
 
 router.delete('/delete-order-by-id/:id', deleteOrderById);
 

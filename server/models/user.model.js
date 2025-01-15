@@ -33,10 +33,10 @@ const userSchema = new Schema({
 
 
 userSchema.pre("save", async function (next) {
+    
     if (!this.isModified("userPassword")) {
         return next(); 
     }
-
     this.userPassword = await hash(this.userPassword, 10);
     next();
 
