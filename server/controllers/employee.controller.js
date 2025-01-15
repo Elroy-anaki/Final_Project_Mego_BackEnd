@@ -147,7 +147,7 @@ export const autoComplete = async (req, res) => {
       _id: 1,
       score: { $meta: 'searchScore' },
       employeeName: 1,
-      employeesEmail: 1,
+      employeeEmail: 1,
       employeePassword: 1,
       premission: 1
     }
@@ -158,6 +158,7 @@ export const autoComplete = async (req, res) => {
 
   try {
     const employees = await Employee.aggregate(pipeline).sort({ score: - 1 })
+    console.log("employees", employees)
     res.status(200).json({
       success: true,
       msg: "Take Suggestions",

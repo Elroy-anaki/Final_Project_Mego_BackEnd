@@ -1,4 +1,4 @@
-import Categories from "../models/category.model.js";
+import Category from "../models/category.model.js";
 import cloudinary from '../config/cloudinary.config.js';
 
 
@@ -8,7 +8,7 @@ export const addCategory = async (req, res) => {
   try {
     const { categoryName } = req.body;
     if (!categoryName) {
-      res.status(400).json({
+      return res.status(500).json({
         success: false,
         msg: "All fields are required!",
       });
@@ -19,15 +19,15 @@ export const addCategory = async (req, res) => {
       req.body.categoryImage = uploadResult.secure_url;
     }
 
-    const newCategory = await MealCategories.create(req.body);
+    const newCategory = await Category.create(req.body);
 
     res.status(201).json({
       success: true,
-      msg: "Meal category added successfully.",
-      data: newCategories,
+      msg: "Category Added!",
+      data: newCategory,
     });
   } catch (error) {
-
+    console.log("error", error)
     if (error.code === 11000) {
       res.status(400).json({
         success: false,
@@ -47,7 +47,7 @@ export const deleteCategory = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const deletedCategory = await MealCategories.findByIdAndDelete(id);
+    const deletedCategory = await Category.findByIdAndDelete(id);
 
     if (!deletedCategory) {
       return res.status(404).json({
@@ -73,7 +73,7 @@ export const deleteCategory = async (req, res) => {
 export const getAllCategories = async (req, res) => {
   try {
 
-    const categories = await Categories.find();
+    const categories = await Category.find();
     res.status(200).json({
       success: true,
       msg: "All meal's categories here",

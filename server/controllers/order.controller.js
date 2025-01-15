@@ -102,18 +102,21 @@ export const capturePaymentPaypal = async (req, res) => {
 
 export const getAllOrdersTables = async (req, res) => {
   console.log(req.query)
-  const { status = 'paid', page, sortBy = '1', limit } = req.query;
-  console.log(status)
-  const fiter = status === 'all' ? {} : { status: status }
+  const { status = 'paid', page, sortBy = '1', limit, date= new Date().toISOString().split('T')[0]} = req.query;
+  console.log(date)
+  const fiter = status === 'all' ? {'dateTime.date': date} : { status: status, 'dateTime.date': date }
 
   try {
-    // const countOrdersTable = OrderTable.countDocuments();
-    const orders = await OrderTable.find(fiter)
-      .populate({
+    const countOrdersTable = await OrderTable.countDocuments(fiter);
+    const orders = await OrderTable
+    .find(fiter)
+    .skip((page - 1) * limit)
+    .limit(limit)
+    .populate({
         path: "user.userId",
         select: "userName userEmail",
       })
-      .populate({
+    .populate({
         path: "table.meals",
         populate: {
           path: "meal",
@@ -124,7 +127,7 @@ export const getAllOrdersTables = async (req, res) => {
     console.log("ssssssssssssssssssssssssssssssss", orders);
     res
       .status(200)
-      .json({ success: true, msg: "success get all orders tables", data: orders });
+      .json({ success: true, msg: "success get all orders tables", data: orders, count: countOrdersTable });
   } catch (error) {
     console.log(error);
     res.status(500).json({

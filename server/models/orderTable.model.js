@@ -47,7 +47,7 @@ const orderTableSchema = new Schema(
 
     status: {
       type: String,
-      enum: ["paid", "eating", "completed"],
+      enum: ["paid", "eating", "completed", "canceled"],
       default: "paid",
     },
     table: {

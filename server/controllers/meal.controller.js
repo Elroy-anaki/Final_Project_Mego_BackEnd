@@ -37,11 +37,12 @@ export const addMeal = async (req, res) => {
 };
 
 export const getAllMeals = async (req, res) => {
-  const { limit, page, search = 'mealName', sortBy = '1', gt = 0 } = req.query;
-
+  const { limit, page, search = 'mealName', sortBy = '1', category = 'All' } = req.query;
+  console.log("category", category)
+  const filter = category === "All" ? {} : {mealCategories : String(category)}
   try {
-    const countMeals = await Meal.countDocuments();
-    const meals = await Meal.find().sort({ [search]: Number(sortBy) })
+    const countMeals = await Meal.countDocuments(filter);
+    const meals = await Meal.find(filter).sort({ [search]: Number(sortBy) })
     .populate('mealCategories', "categoryName")
     .populate({
       path: 'reviews',
@@ -58,6 +59,7 @@ export const getAllMeals = async (req, res) => {
       count: countMeals
     });
   } catch (error) {
+    console.log("errorerrorerrorerror", error)
     res.status(500).json({
       success: false,
       msg: "Failed to retrieve meals.",
