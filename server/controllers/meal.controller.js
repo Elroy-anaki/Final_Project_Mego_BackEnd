@@ -9,7 +9,6 @@ export const addMeal = async (req, res) => {
   req.body.ingredients = String(req.body.ingredients).split(',')
 
   req.body.mealCategories = JSON.parse(req.body.mealCategories)
-  console.log("TEST", req.body.mealCategories);
   try {
     const { mealName, mealPrice, ingredients, mealCategories } = req.body;
     if (!mealName || !mealPrice || !ingredients || !mealCategories)
@@ -123,7 +122,7 @@ export const autoComplete = async (req, res) => {
 
   pipeline.push({
     $search: {
-      index: 'autoCompleteMeals',
+      index: String(process.env.MONGO_SEARCH_INDEX_MEALS),
       autocomplete: {
         query: query,
         path: 'mealName',
@@ -175,7 +174,6 @@ export const autoComplete = async (req, res) => {
 };
 
 export const getAllReviewsByMealId = async (req, res) => {
-  console.log("get reviews...")
   try {
     const { id } = req.params;
     const meal = await Meal.findById(id).populate({ path: 'reviews' });
@@ -202,10 +200,7 @@ export const editMealById = async (req, res) => {
   req.body.ingredients = String(req.body.ingredients).split(',')
   req.body.mealCategories = JSON.parse(req.body.mealCategories)
   try {
-    // const existingMeal = await Meal.findById(id);
-    // if (!existingMeal) { throw new Error("The meal doesn't exist!") }
 
-    // const mealImage = existingMeal.mealImage;
     if (!req.file) delete req.body.mealImage
 
     const editedMeal = await Meal.findByIdAndUpdate(id, req.body, { new: true })

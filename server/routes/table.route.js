@@ -8,20 +8,20 @@ import {
   deleteTabelById,
 } from "../controllers/table.controller.js";
 
-
 const router = Router();
 
-router.post("/create-table", createTable);
 
-router.get("/get-all-tables", getAllTables);
+router.post('/create-table', createTable);
 
-router.get("/get-table-by-user-id/:userEmail", getTableByUserEmail);
+router.get('/get-all-tables', getAllTables);
 
-router.put("/edit-table-by-id/:id", editTableById);
+router.get('/get-table-by-user-id/:userEmail', getTableByUserEmail);
 
-router.put("/add-guests/:id", addGuests)
+router.put('/edit-table-by-id/:id', editTableById);
 
-router.delete("/delete-table-by-id/:id", deleteTabelById);
+router.put('/add-guests/:id', addGuests)
+
+router.delete('/delete-table-by-id/:id', deleteTabelById);
 
 
 export default router;

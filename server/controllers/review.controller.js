@@ -4,9 +4,7 @@ import OrderTable from "../models/orderTable.model.js";
 
 export const addReviews = async (req, res) => {
   const reviews = req.body
-  console.log("req.body", reviews); 
   const {orderId, guestEmail} = req.params
-
   try {
     await OrderTable.updateOne(
       {

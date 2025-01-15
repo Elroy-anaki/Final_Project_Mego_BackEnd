@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import {resetPassword, forogtPassword,  verifyToken , signOut, emailVerification } from '../controllers/auth.controller.js'
+
 const router = Router();
 
 
