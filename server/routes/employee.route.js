@@ -17,15 +17,15 @@ const router = Router();
 
 router.post("/add-employee",isAdmin, addEmployee);
 
-router.post("/sign-in", signIn);
+router.post('/sign-in', signIn);
 
-router.get("/get-all-employees", getAllEmployees);
+router.get('/get-all-employees', getAllEmployees);
 
-router.get("/get-employee-by-id/:id", getEmployeeById);
+router.get('/get-employee-by-id/:id', getEmployeeById);
 
 router.get('/auto-complete', autoComplete)
 
-router.put("/edit-employee-by-id/:id", editEmployeeById)
+router.put('/edit-employee-by-id/:id', editEmployeeById)
 
 router.delete('/delete-employee-by-id/:id', isAdmin, deleteEmployeeById);
 

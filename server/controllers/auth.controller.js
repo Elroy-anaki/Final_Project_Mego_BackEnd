@@ -1,7 +1,6 @@
 import jwt from "jsonwebtoken";
 import Employee from "../models/emlpoyee.model.js";
 import User from "../models/user.model.js";
-import transporter from "../config/nodemailer.config.js";
 import { nanoid } from "nanoid";
 import {
   verifyEmailByType,
@@ -26,6 +25,7 @@ export const emailVerification = async (req, res) => {
     });
   }
 };
+
 export const forogtPassword = async (req, res) => {
 
   const { email, premission } = req.body;
@@ -73,7 +73,6 @@ export const resetPassword = async (req, res) => {
 };
 
 export const verifyToken = async (req, res) => {
-  console.log("TOKEN........");
 
   try {
     const { token } = req.cookies;
@@ -82,7 +81,7 @@ export const verifyToken = async (req, res) => {
 
     const data = jwt.verify(
       token,
-      "Xn5&v9@z#G%hJq!Rk1tW*Z^a4Lb$NcP+Ym2o8Us0pTc7EdF"
+      String(process.env.JWT_SECRET)
     );
 
     if (!data) throw new Error("Token Not Valid");

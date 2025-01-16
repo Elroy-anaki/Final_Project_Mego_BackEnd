@@ -7,16 +7,11 @@ import { sendEmailForReviewMeals, sendOrderDetailsToCustomer } from '../service/
 import { changeStatusByOrderType } from '../utils/order.utils.js'
 import { createOrder, capturePayment, setObjectByPayPalSchema } from '../service/payment.service.js'
 
-
-
-
 export const addOrder = async (req, res) => {
-  console.log("req.body", req.body)
   try {
     
     const newOrder = await OrderTable.create(req.body);
     await sendOrderDetailsToCustomer(newOrder)
-    console.log("Mail____________________________________")
     await Table.findByIdAndDelete(req.params.tableId)
 
     const restaurant = await Restaurant.findOne();
@@ -78,7 +73,6 @@ export const createOrderPayPal = async (req, res) => {
   console.log(table)
   setObjectByPayPalSchema(table.meals)
   try {
-    // return total_price
     const orderId = await createOrder(table.meals, table.totalPrice);
     res.json({ orderId })
   } catch (error) {
@@ -124,7 +118,6 @@ export const getAllOrdersTables = async (req, res) => {
         },
       })
 
-    console.log("ssssssssssssssssssssssssssssssss", orders);
     res
       .status(200)
       .json({ success: true, msg: "success get all orders tables", data: orders, count: countOrdersTable });
@@ -203,7 +196,6 @@ export const editOrderById = async (req, res) => {
   }
 };
 
-
 export const changeStatus = async (req, res) => {
   console.log(req.body)
   try {
@@ -221,7 +213,7 @@ export const changeStatus = async (req, res) => {
     res.status(500).json({ success: false, msg: 'order not uptaded successfully' })
 
   }
-}
+};
 
 export const deleteOrderById = async (req, res) => {
   console.log(req.params.id);

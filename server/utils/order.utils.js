@@ -6,11 +6,10 @@ export const changeStatusByOrderType =  async(orderId, type, newStatus) => {
       const order = await OrderTable.findByIdAndUpdate(orderId, {status:newStatus}, {new:true})
       return order
     } 
-
-      
+ 
   } catch (error) {
     throw error
   }
 
-}
+};
   

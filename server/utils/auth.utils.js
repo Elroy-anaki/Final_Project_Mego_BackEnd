@@ -1,7 +1,6 @@
 import User from '../models/user.model.js'
 import Employee from '../models/emlpoyee.model.js'
 
-
 export const changePasswordByPremission = async (data, queryParams) => {
     try {
         const { premission, password } = data;
@@ -28,7 +27,6 @@ export const changePasswordByPremission = async (data, queryParams) => {
         throw error;
     }
 };
-
 
 export const verifyEmailByType = async (data) => {
     try {

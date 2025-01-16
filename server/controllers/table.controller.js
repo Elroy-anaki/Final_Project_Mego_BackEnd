@@ -49,11 +49,8 @@ export const getTableByUserEmail = async (req, res) => {
     const { userEmail } = req.params;
     console.log(userEmail)
 
-    // const table = await Table.findOne({ "user.userId": userId }).populate({ path: 'meals.meal' })
-    // console.log(table)
     const table = await Table.findOne({
       "sharedWith":{$elemMatch:{ guestEmail: userEmail, rated: false }} }).populate({ path: 'meals.meal' })
-      // console.log(table)
       console.log(table)
 
 
@@ -80,7 +77,6 @@ export const editTableById = async (req, res) => {
     const { id } = req.params;
     console.log(id)
 
-    console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
     console.log(req.body)
     // return
 
@@ -88,7 +84,6 @@ export const editTableById = async (req, res) => {
     if (!updatedTable) throw "Table not found!"
     updatedTable.meals = req.body
     await updatedTable.save();
-    console.log("reeeeeeeeeeeeeeeeeeeeeeeeeeendnfldnfnd;gdkgmg;dmgp;es",updatedTable)
 
     res.status(200).json({
       success: true,
@@ -107,10 +102,9 @@ export const editTableById = async (req, res) => {
 
 export const addGuests = async (req, res) => {
   console.log(req.body)
-  sendInviteToTableEmail(req.body)
-
   try {
     await Table.findByIdAndUpdate(req.params.id, {sharedWith: req.body})
+    sendInviteToTableEmail(req.body)
     
 
     res.status(200).json({
