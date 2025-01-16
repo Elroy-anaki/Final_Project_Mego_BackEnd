@@ -8,11 +8,14 @@ import {
   editEmployeeById,
   deleteEmployeeById
 } from "../controllers/employee.controller.js";
+import { isAdmin } from "../middlewares/isAdmin.js";
+
+isAdmin
 
 
 const router = Router();
 
-router.post("/add-employee", addEmployee);
+router.post("/add-employee",isAdmin, addEmployee);
 
 router.post("/sign-in", signIn);
 
@@ -24,7 +27,7 @@ router.get('/auto-complete', autoComplete)
 
 router.put("/edit-employee-by-id/:id", editEmployeeById)
 
-router.delete('/delete-employee-by-id/:id', deleteEmployeeById);
+router.delete('/delete-employee-by-id/:id', isAdmin, deleteEmployeeById);
 
 export default router;
 

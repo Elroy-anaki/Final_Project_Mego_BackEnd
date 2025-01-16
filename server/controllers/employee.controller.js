@@ -6,7 +6,6 @@ import jwt from "jsonwebtoken";
 
 export const addEmployee = async (req, res) => {
   try {
-    console.log(req.body);
     const { employeeName, employeeEmail, employeePassword } = req.body;
 
     if (!employeeName || !employeeEmail || !employeePassword)
@@ -78,8 +77,6 @@ export const signIn = async (req, res) => {
 };
 
 export const getAllEmployees = async (req, res) => {
-  console.log("employees")
-  console.log(req.query)
 
   const { limit , page, search = 'all' } = req.query;
   const filterBy = search === 'all' ? {} : {premission: search}
