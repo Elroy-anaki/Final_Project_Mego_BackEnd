@@ -10,8 +10,6 @@ import {
 } from "../controllers/employee.controller.js";
 import { isAdmin } from "../middlewares/isAdmin.js";
 
-isAdmin
-
 
 const router = Router();
 
