@@ -16,7 +16,7 @@ import cookieParser from "cookie-parser";
 app.use(cors({
     optionsSuccessStatus: 200,
     credentials: true,
-    origin: ["https://plate-ahead-client-nvtz5cuor-elroy-anakis-projects.vercel.app", "http://localhost:8001", "http://localhost:8000"]
+    origin: ["https://plate-ahead-client.vercel.app", "http://localhost:8001", "http://localhost:8000"]
 }));
 
 app.use(express.json());
