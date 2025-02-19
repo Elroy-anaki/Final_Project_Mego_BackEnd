@@ -16,7 +16,7 @@ import cookieParser from "cookie-parser";
 app.use(cors({
     optionsSuccessStatus: 200,
     credentials: true,
-    origin: [process.env.URL_CLIENT, "http://localhost:8001", "http://localhost:8000"]
+    origin: [process.env.URL_CLIENT_DEV, process.env.URL_ADMIN_DEV]
 }));
 
 app.use(express.json());
