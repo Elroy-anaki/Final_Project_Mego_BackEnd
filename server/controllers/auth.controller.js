@@ -75,12 +75,12 @@ export const resetPassword = async (req, res) => {
 export const verifyToken = async (req, res) => {
 
   try {
-    const { token } = req.cookies;
+    const { plateAheadToken } = req.cookies;
 
     if (!token) throw new Error("Token not Exist");
 
     const data = jwt.verify(
-      token,
+      plateAheadToken,
       String(process.env.JWT_SECRET)
     );
 
