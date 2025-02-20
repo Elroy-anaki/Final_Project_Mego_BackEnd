@@ -83,7 +83,7 @@ export const signIn = async (req, res) => {
     console.log("PAYLOADDDDDDDD, ", token)
 
     console.log("Token is sending...!!!!!!!!!")
-    res.cookie("token", token, jwtCookieOptions);
+    res.cookie("plateAheadToken", token, jwtCookieOptions);
     console.log("Token is sending...")
     res.status(200).json({
       success: true,

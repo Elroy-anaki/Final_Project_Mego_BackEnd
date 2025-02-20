@@ -102,9 +102,11 @@ export const verifyToken = async (req, res) => {
 
 export const signOut = async (req, res) => {
   try {
-    res.clearCookie("token", {
+    res.clearCookie("plateAheadToken", {
       httpOnly: true,
       secure: true,
+      sameSite: "None",
+      expires: new Date(0)
     });
 
     res.status(200).json({
