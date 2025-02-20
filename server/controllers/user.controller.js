@@ -80,6 +80,7 @@ export const signIn = async (req, res) => {
     const data = generateToken(user);
     const token = data.token;
     const payload = data.payload;
+    console.log("PAYLOADDDDDDDD, ", token)
 
     console.log("Token is sending...!!!!!!!!!")
     res.cookie("token", token, jwtCookieOptions);
