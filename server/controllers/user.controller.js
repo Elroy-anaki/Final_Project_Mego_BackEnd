@@ -73,15 +73,16 @@ export const signIn = async (req, res) => {
     if (!user) throw new Error("User Not Exist!");
     if(!user.verify ) throw new Error("Verfiy your account please!");
 
-    const isMatch = await compare(userPassword, user.userPassword);
+    const isPasswordMatch = await compare(userPassword, user.userPassword);
 
-    if (!isMatch) throw new Error("Password not Valid!");
+    if (!isPasswordMatch) throw new Error("Password not Valid!");
 
     const data = generateToken(user);
     const token = data.token;
     const payload = data.payload;
 
     res.cookie("token", token, jwtCookieOptions);
+    console.log("Token is sending...")
     res.status(200).json({
       success: true,
       msg: "User Sign-in Successfully ",

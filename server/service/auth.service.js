@@ -12,5 +12,5 @@ export const generateToken = (user) => {
 export const jwtCookieOptions = {
     httpOnly: true,
     secure: true,
-    maxAge: 1000 * 60 * 60 * 1
+    maxAge: 1000 * 60 * 60 * 1,
 };
