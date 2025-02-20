@@ -77,7 +77,7 @@ export const verifyToken = async (req, res) => {
   try {
     const { plateAheadToken } = req.cookies;
 
-    if (!token) throw new Error("Token not Exist");
+    if (!plateAheadToken) throw new Error("Token not Exist");
 
     const data = jwt.verify(
       plateAheadToken,
