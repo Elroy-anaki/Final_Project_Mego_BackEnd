@@ -106,6 +106,7 @@ export const signOut = async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "None",
+      path: "/",
       expires: new Date(0)
     });
 
@@ -117,7 +118,7 @@ export const signOut = async (req, res) => {
     res.status(401).json({
       success: false,
       msg: error.message || " Sign Out Failed",
-      error:  error,
+      error: error,
     });
   }
 };
