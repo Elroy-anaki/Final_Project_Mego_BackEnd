@@ -53,7 +53,7 @@ export const signIn = async (req, res) => {
     const token = data.token;
     const payload = data.payload;
 
-    res.cookie("token", token, jwtCookieOptions);
+    res.cookie("plateAheadToken", token, jwtCookieOptions);
 
     res.status(200).json({
       success: true,
