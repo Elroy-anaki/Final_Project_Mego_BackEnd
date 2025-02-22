@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken';
 export const isAdmin = async (req, res, next) =>  {
     try {
         const token = req.cookies?.plateAheadToken;
+        console.log("___________________________________________________", token)
 
         if (!token) {
             console.log("++++++++++++++++++++++++++++++++++++++++++")
