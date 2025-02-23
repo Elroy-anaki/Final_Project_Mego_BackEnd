@@ -13,6 +13,8 @@ export const isAdmin = async (req, res, next) =>  {
         }
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        console.log("decoded", decoded)
+        console.log("JWT", process.env.JWT_SECRET)
 
         if(decoded.data.premission !== 'admin'){
             return res.status(401).json({ msg: 'You are not admin' });
